@@ -13,7 +13,7 @@
 
 
 
-<title>Hello World | QYFJ793&#39;s Blog</title>
+<title>Rust01_介绍和环境配置 | QYFJ793&#39;s Blog</title>
 
 
 
@@ -281,7 +281,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">Hello World</h1>
+            <h1 class="post-title">Rust01_介绍和环境配置</h1>
             
                 <div class="post-meta">
                     
@@ -290,28 +290,87 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">October 5, 2024&nbsp;&nbsp;21:34:06</a>
+                        Date: <a href="#">October 6, 2024&nbsp;&nbsp;18:42:46</a>
                         </span>
                     
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/rust/">rust</a>
+                            
+                        </span>
                     
                 </div>
             
         </header>
 
         <div class="post-content">
-            <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+            <h1 id="一、RUST介绍"><a href="#一、RUST介绍" class="headerlink" title="一、RUST介绍"></a>一、RUST介绍</h1><ul>
+<li><strong>Rust是由Mozilla主导开发的通用、编译型编程语言。设计准则为安全、并发、实用”，支持函数式、并发式、过程式以及面向对象的编程风格。</strong></li>
+</ul>
+<hr>
+<ul>
+<li><strong>Rust语言的特点</strong><ul>
+<li><p><strong>高性能</strong> - Rust 速度惊人且内存利用率极高。由于没有运行时和垃圾回收，它能够胜任对性能要求特别高的服务，可以在嵌入式设备上运行，还能轻松和其他语言集成。</p>
+</li>
+<li><p><strong>可靠性</strong> - Rust 丰富的类型系统和所有权模型保证了内存安全和线程安全，让您在编译期就能够消除各种各样的错误。</p>
+</li>
+<li><p><strong>生产力</strong> - Rust 拥有出色的文档、友好的编译器和清晰的错误提示信息， 还集成了一流的工具 —— 包管理器和构建工具， 智能地自动补全和类型检验的多编辑器支持， 以及自动格式化代码等等。</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li><strong>Rust的应用</strong><ul>
+<li><strong>传统命令行程序</strong> - Rust 编译器可以直接生成目标可执行程序，不需要任何解释程序。</li>
+<li><strong>Web 应用</strong> - Rust 可以被编译成 WebAssembly，WebAssembly 是一种 JavaScript 的高效替代品。</li>
+<li><strong>网络服务器</strong> - Rust 用极低的资源消耗做到安全高效，且具备很强的大规模并发处理能力，十分适合开发普通或极端的服务器程序。</li>
+<li><strong>嵌入式设备</strong> - Rust 同时具有JavaScript 一般的高效开发语法和 C 语言的执行效率，支持底层平台的开发。</li>
+</ul>
+</li>
+</ul>
+<h1 id="二、RUST环境配置（以Windows系统环境作为演示）"><a href="#二、RUST环境配置（以Windows系统环境作为演示）" class="headerlink" title="二、RUST环境配置（以Windows系统环境作为演示）"></a>二、RUST环境配置（以Windows系统环境作为演示）</h1><h2 id="1-安装-Rust-编译工具"><a href="#1-安装-Rust-编译工具" class="headerlink" title="1.安装 Rust 编译工具"></a>1.安装 Rust 编译工具</h2><ul>
+<li>Rust 编译工具可以去官方网站下载： <a target="_blank" rel="noopener" href="https://www.rust-lang.org/zh-CN/tools/install%E3%80%82">https://www.rust-lang.org/zh-CN/tools/install。</a></li>
+</ul>
+<h2 id="2-运行下载好的Rustup-init安装程序（需提前安装Microsoft-C-生成工具）"><a href="#2-运行下载好的Rustup-init安装程序（需提前安装Microsoft-C-生成工具）" class="headerlink" title="2.运行下载好的Rustup-init安装程序（需提前安装Microsoft C++ 生成工具）"></a>2.运行下载好的Rustup-init安装程序（需提前安装Microsoft C++ 生成工具）</h2><ul>
+<li>运行安装程序，选择1（默认）并回车继续安装</li>
+<li><img src="https://www.runoob.com/wp-content/uploads/2020/04/rust-env3.png" ></li>
+</ul>
+<hr>
+<ul>
+<li>安装完成后输入如下命令：<blockquote>
+<p>rustc -V        # 注意的大写的 V</p>
+</blockquote>
+</li>
+<li>出现以下提示即为安装成功：<img src="https://www.runoob.com/wp-content/uploads/2020/04/rust-env4.png"></li>
+</ul>
+<hr>
+<h2 id="3-安装VS-Code的RUST插件"><a href="#3-安装VS-Code的RUST插件" class="headerlink" title="3.安装VS Code的RUST插件"></a>3.安装VS Code的RUST插件</h2><ul>
+<li><strong>rust-analyzer</strong> -用于使VS code支持RUST运行</li>
+<li><strong>even better toml</strong> -RUST使用toml文件进行配置，安装此插件可以使vs code更好的支持toml文件</li>
+<li><strong>Dependi</strong> -用于更好的管理RUST包</li>
+</ul>
+<h1 id="三、开始第一个RUST程序"><a href="#三、开始第一个RUST程序" class="headerlink" title="三、开始第一个RUST程序"></a>三、开始第一个RUST程序</h1><h2 id="1-新建一个名为main-rs的文件，并输入以下代码："><a href="#1-新建一个名为main-rs的文件，并输入以下代码：" class="headerlink" title="1.新建一个名为main.rs的文件，并输入以下代码："></a>1.新建一个名为main.rs的文件，并输入以下代码：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fn main()&#123;</span><br><span class="line">    println!(&quot;hello world~&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-使用在终端内输入以下代码来对main-rs进行编译"><a href="#2-使用在终端内输入以下代码来对main-rs进行编译" class="headerlink" title="2.使用在终端内输入以下代码来对main.rs进行编译"></a>2.使用在终端内输入以下代码来对main.rs进行编译</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustc main.rs</span><br></pre></td></tr></table></figure>
+<h2 id="3-编译完成后会出现一个名为main-exe的可执行程序，运行后会输出以下内容："><a href="#3-编译完成后会出现一个名为main-exe的可执行程序，运行后会输出以下内容：" class="headerlink" title="3.编译完成后会出现一个名为main.exe的可执行程序，运行后会输出以下内容："></a>3.编译完成后会出现一个名为main.exe的可执行程序，运行后会输出以下内容：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello world~</span><br></pre></td></tr></table></figure>
+<h2 id="4-使用cargo创建一个RUST程序"><a href="#4-使用cargo创建一个RUST程序" class="headerlink" title="4.使用cargo创建一个RUST程序"></a>4.使用cargo创建一个RUST程序</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo new hello_cargo</span><br></pre></td></tr></table></figure>
+<p>通过该命令可创建一个新的RUST项目。<br>以下是cargo的一些常用命令：</p>
+<ul>
+<li>cargo new “project-name”：创建一个新的 Rust 项目。</li>
+<li>cargo build：编译当前项目。</li>
+<li>cargo run：编译并运行当前项目。</li>
+<li>cargo check：检查当前项目的语法和类型错误。</li>
+<li>cargo test：运行当前项目的单元测试。</li>
+<li>cargo update：更新 Cargo.toml 中指定的依赖项到最新版本。</li>
+</ul>
+<p>cargo文件架构：</p>
+<ul>
+<li><strong>Cargo.toml</strong>:Cargo 通过 Cargo.toml 文件管理项目的依赖，这个文件列出了项目所需的所有外部库以及它们的版本。</li>
+<li><strong>src</strong>:该文件夹用于放rust源代码</li>
+<li><strong>target</strong>：该文件夹下放置编译后的可执行文件</li>
+</ul>
 
         </div>
 
@@ -326,7 +385,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://example.com/2024/10/05/hello-world/">http://example.com/2024/10/05/hello-world/</a></span>
+                        <span><a href="http://example.com/2024/10/06/Rust%E4%BB%8B%E7%BB%8D%E5%92%8C%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">http://example.com/2024/10/06/Rust%E4%BB%8B%E7%BB%8D%E5%92%8C%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</a></span>
                     </p>
                 
                 
@@ -349,6 +408,10 @@
                 <span>Tag(s):</span>
                 <span class="tag">
                     
+                    
+                        <a href="/tags/rust/"># rust</a>
+                    
+                        
                 </span>
             </div>
             <div>
@@ -359,8 +422,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/10/06/Rust%E4%BB%8B%E7%BB%8D%E5%92%8C%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">Rust01_介绍和环境配置</a>
             
+            <a class="next" rel="next" href="/2024/10/05/hello-world/">Hello World</a>
             
         </section>
 
