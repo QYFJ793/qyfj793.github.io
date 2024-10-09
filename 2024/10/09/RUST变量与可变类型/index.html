@@ -13,7 +13,7 @@
 
 
 
-<title>Rust01_介绍和环境配置 | QYFJ793&#39;s Blog</title>
+<title>RUST变量与可变类型 | QYFJ793&#39;s Blog</title>
 
 
 
@@ -281,7 +281,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">Rust01_介绍和环境配置</h1>
+            <h1 class="post-title">RUST变量与可变类型</h1>
             
                 <div class="post-meta">
                     
@@ -290,7 +290,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">October 6, 2024&nbsp;&nbsp;18:42:46</a>
+                        Date: <a href="#">October 9, 2024&nbsp;&nbsp;19:27:22</a>
                         </span>
                     
                     
@@ -306,70 +306,48 @@
         </header>
 
         <div class="post-content">
-            <h1 id="一、RUST介绍"><a href="#一、RUST介绍" class="headerlink" title="一、RUST介绍"></a>一、RUST介绍</h1><ul>
-<li><strong>Rust是由Mozilla主导开发的通用、编译型编程语言。设计准则为安全、并发、实用”，支持函数式、并发式、过程式以及面向对象的编程风格。</strong></li>
+            <h1 id="一、可变变量和不可变变量-Mutable-Immutable"><a href="#一、可变变量和不可变变量-Mutable-Immutable" class="headerlink" title="一、可变变量和不可变变量(Mutable&amp;Immutable)"></a>一、可变变量和不可变变量(Mutable&amp;Immutable)</h1><ul>
+<li>Rust 是强类型语言，但具有自动判断变量类型的能力。默认情况下，Rust 中的变量是不可变的，除非使用 mut 关键字声明为可变变量。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let a = 123;       // 不可变变量</span><br><span class="line">let mut b = 10;  // 可变变量</span><br></pre></td></tr></table></figure></li>
 </ul>
-<hr>
+<h1 id="二、常量-Constants"><a href="#二、常量-Constants" class="headerlink" title="二、常量(Constants)"></a>二、常量(Constants)</h1><ul>
+<li>Rust语言中使用const关键字来定义一个常量。定义常量时需要明确指定常量的数据类型. <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const NUM: i32 = 123;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="常量有以下几点注意事项"><a href="#常量有以下几点注意事项" class="headerlink" title="常量有以下几点注意事项:"></a>常量有以下几点注意事项:</h3><ul>
+<li>必须显示指定数据类型</li>
+<li>常量名一般使用大写字母，否则编译器会报Warning。</li>
+<li>必须使用常量表达式进行赋值，即必须是编译期能计算出<br>的值</li>
+<li>常量不支持重定义（遮蔽），这和变量是不同的。</li>
+</ul>
+<p><strong>注</strong>：不可变变量与常量的区别？</p>
 <ul>
-<li><strong>Rust语言的特点</strong><ul>
-<li><p><strong>高性能</strong> - Rust 速度惊人且内存利用率极高。由于没有运行时和垃圾回收，它能够胜任对性能要求特别高的服务，可以在嵌入式设备上运行，还能轻松和其他语言集成。</p>
-</li>
-<li><p><strong>可靠性</strong> - Rust 丰富的类型系统和所有权模型保证了内存安全和线程安全，让您在编译期就能够消除各种各样的错误。</p>
-</li>
-<li><p><strong>生产力</strong> - Rust 拥有出色的文档、友好的编译器和清晰的错误提示信息， 还集成了一流的工具 —— 包管理器和构建工具， 智能地自动补全和类型检验的多编辑器支持， 以及自动格式化代码等等。</p>
-</li>
+<li>常量使用const进行声明，不可变变量使用<strong>let</strong>进行声<br>明</li>
+<li>常量在编译期就确定了值，不能在运行时改变。不可变变<br>量直到运行期来能确定下来</li>
+<li>常量不可以修改，不可变变量可以通过shadowing来修<br>改。</li>
+<li>常量必须声明类型，不可变变量不需要声明类型。</li>
+<li>常量必须使用大写字母，不可变变量不需要</li>
+</ul>
+<h1 id="三、静态变量-Static"><a href="#三、静态变量-Static" class="headerlink" title="三、静态变量(Static)"></a>三、静态变量(Static)</h1><ul>
+<li>静态变量使用static关键字进行声明并在编译时分配内<br>存，并且在程序运行期间一直存在。</li>
+<li>静态变量可以在整个程序中共享，并且可以在多个线程之<br>间共享。</li>
+<li>静态变量的值在程序运行期间不会改变，因此它们通常用<br>于存储程序的全局状态。</li>
+</ul>
+<h2 id="与常量的相似之处："><a href="#与常量的相似之处：" class="headerlink" title="与常量的相似之处："></a>与常量的相似之处：</h2><ul>
+<li>定义方式类型，一个使用static,一个使用const;</li>
+<li>名称都要求使用大写，否则会报Warning;<br>都必须明确指定类型；</li>
+<li>两者都要求必须使用常量表达式进行赋值，即必须是编译<br>期能计算出的值；</li>
+<li>两者都不支持重定义（遮蔽），这和变量是不同的。</li>
+</ul>
+<h2 id="和常量也有一些重要的区别："><a href="#和常量也有一些重要的区别：" class="headerlink" title="和常量也有一些重要的区别："></a>和常量也有一些重要的区别：</h2><ul>
+<li>常量在编译时被内联，但静态变量不会。在整个程序中静<br>态变量只有一个实例，·也就是说所有引用都指向同一个地<br>址。</li>
+<li>常量不可变，而静态变量和普通变量一样，默认不可变，<br>但可以通过mut关键字定义为可变。</li>
+</ul>
+<h1 id="四、作用域和遮蔽-variableshadowing）"><a href="#四、作用域和遮蔽-variableshadowing）" class="headerlink" title="四、作用域和遮蔽(variableshadowing）"></a>四、作用域和遮蔽(variableshadowing）</h1><h2 id="作用域："><a href="#作用域：" class="headerlink" title="作用域："></a>作用域：</h2><ul>
+<li>变量绑定有一个作用域（scope),它被限定只在一个代码块<br>(block)中生存(Iive)。</li>
+<li>代码块是一个被{}包围的语句集合。另外也允许变量遮蔽(variable shadowing)。<h2 id="遮蔽："><a href="#遮蔽：" class="headerlink" title="遮蔽："></a>遮蔽：</h2><ul>
+<li>遮蔽的概念与其他面向对象语言里的”重写”（Override）或”重载”（Overload）是不一样的。遮蔽就是刚才讲述的所谓”重新绑定”。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">  let x = 5;</span><br><span class="line">  let x = x + 1;</span><br><span class="line">  let x = x * 2;</span><br><span class="line">  println!(&quot;The value of x is: &#123;&#125;&quot;, x);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></li>
+<li>这段程序的运行结果：The value of x is: 12</li>
 </ul>
 </li>
-</ul>
-<hr>
-<ul>
-<li><strong>Rust的应用</strong><ul>
-<li><strong>传统命令行程序</strong> - Rust 编译器可以直接生成目标可执行程序，不需要任何解释程序。</li>
-<li><strong>Web 应用</strong> - Rust 可以被编译成 WebAssembly，WebAssembly 是一种 JavaScript 的高效替代品。</li>
-<li><strong>网络服务器</strong> - Rust 用极低的资源消耗做到安全高效，且具备很强的大规模并发处理能力，十分适合开发普通或极端的服务器程序。</li>
-<li><strong>嵌入式设备</strong> - Rust 同时具有JavaScript 一般的高效开发语法和 C 语言的执行效率，支持底层平台的开发。</li>
-</ul>
-</li>
-</ul>
-<h1 id="二、RUST环境配置（以Windows系统环境作为演示）"><a href="#二、RUST环境配置（以Windows系统环境作为演示）" class="headerlink" title="二、RUST环境配置（以Windows系统环境作为演示）"></a>二、RUST环境配置（以Windows系统环境作为演示）</h1><h2 id="1-安装-Rust-编译工具"><a href="#1-安装-Rust-编译工具" class="headerlink" title="1.安装 Rust 编译工具"></a>1.安装 Rust 编译工具</h2><ul>
-<li>Rust 编译工具可以去官方网站下载： <a target="_blank" rel="noopener" href="https://www.rust-lang.org/zh-CN/tools/install%E3%80%82">https://www.rust-lang.org/zh-CN/tools/install。</a></li>
-</ul>
-<h2 id="2-运行下载好的Rustup-init安装程序（需提前安装Microsoft-C-生成工具）"><a href="#2-运行下载好的Rustup-init安装程序（需提前安装Microsoft-C-生成工具）" class="headerlink" title="2.运行下载好的Rustup-init安装程序（需提前安装Microsoft C++ 生成工具）"></a>2.运行下载好的Rustup-init安装程序（需提前安装Microsoft C++ 生成工具）</h2><ul>
-<li>运行安装程序，选择1（默认）并回车继续安装</li>
-<li><img src="https://www.runoob.com/wp-content/uploads/2020/04/rust-env3.png" ></li>
-</ul>
-<hr>
-<ul>
-<li>安装完成后输入如下命令：<blockquote>
-<p>rustc -V        # 注意的大写的 V</p>
-</blockquote>
-</li>
-<li>出现以下提示即为安装成功：<img src="https://www.runoob.com/wp-content/uploads/2020/04/rust-env4.png"></li>
-</ul>
-<hr>
-<h2 id="3-安装VS-Code的RUST插件"><a href="#3-安装VS-Code的RUST插件" class="headerlink" title="3.安装VS Code的RUST插件"></a>3.安装VS Code的RUST插件</h2><ul>
-<li><strong>rust-analyzer</strong> -用于使VS code支持RUST运行</li>
-<li><strong>even better toml</strong> -RUST使用toml文件进行配置，安装此插件可以使vs code更好的支持toml文件</li>
-<li><strong>Dependi</strong> -用于更好的管理RUST包</li>
-</ul>
-<h1 id="三、开始第一个RUST程序"><a href="#三、开始第一个RUST程序" class="headerlink" title="三、开始第一个RUST程序"></a>三、开始第一个RUST程序</h1><h2 id="1-新建一个名为main-rs的文件，并输入以下代码："><a href="#1-新建一个名为main-rs的文件，并输入以下代码：" class="headerlink" title="1.新建一个名为main.rs的文件，并输入以下代码："></a>1.新建一个名为main.rs的文件，并输入以下代码：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fn main()&#123;</span><br><span class="line">    println!(&quot;hello world~&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="2-使用在终端内输入以下代码来对main-rs进行编译"><a href="#2-使用在终端内输入以下代码来对main-rs进行编译" class="headerlink" title="2.使用在终端内输入以下代码来对main.rs进行编译"></a>2.使用在终端内输入以下代码来对main.rs进行编译</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustc main.rs</span><br></pre></td></tr></table></figure>
-<h2 id="3-编译完成后会出现一个名为main-exe的可执行程序，运行后会输出以下内容："><a href="#3-编译完成后会出现一个名为main-exe的可执行程序，运行后会输出以下内容：" class="headerlink" title="3.编译完成后会出现一个名为main.exe的可执行程序，运行后会输出以下内容："></a>3.编译完成后会出现一个名为main.exe的可执行程序，运行后会输出以下内容：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello world~</span><br></pre></td></tr></table></figure>
-<h2 id="4-使用cargo创建一个RUST程序"><a href="#4-使用cargo创建一个RUST程序" class="headerlink" title="4.使用cargo创建一个RUST程序"></a>4.使用cargo创建一个RUST程序</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo new hello_cargo</span><br></pre></td></tr></table></figure>
-<p>通过该命令可创建一个新的RUST项目。<br>以下是cargo的一些常用命令：</p>
-<ul>
-<li>cargo new “project-name”：创建一个新的 Rust 项目。</li>
-<li>cargo build：编译当前项目。</li>
-<li>cargo run：编译并运行当前项目。</li>
-<li>cargo check：检查当前项目的语法和类型错误。</li>
-<li>cargo test：运行当前项目的单元测试。</li>
-<li>cargo update：更新 Cargo.toml 中指定的依赖项到最新版本。</li>
-</ul>
-<p>cargo文件架构：</p>
-<ul>
-<li><strong>Cargo.toml</strong>:Cargo 通过 Cargo.toml 文件管理项目的依赖，这个文件列出了项目所需的所有外部库以及它们的版本。</li>
-<li><strong>src</strong>:该文件夹用于放rust源代码</li>
-<li><strong>target</strong>：该文件夹下放置编译后的可执行文件</li>
 </ul>
 
         </div>
@@ -385,7 +363,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://example.com/2024/10/06/Rust%E4%BB%8B%E7%BB%8D%E5%92%8C%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">http://example.com/2024/10/06/Rust%E4%BB%8B%E7%BB%8D%E5%92%8C%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</a></span>
+                        <span><a href="http://example.com/2024/10/09/RUST%E5%8F%98%E9%87%8F%E4%B8%8E%E5%8F%AF%E5%8F%98%E7%B1%BB%E5%9E%8B/">http://example.com/2024/10/09/RUST%E5%8F%98%E9%87%8F%E4%B8%8E%E5%8F%AF%E5%8F%98%E7%B1%BB%E5%9E%8B/</a></span>
                     </p>
                 
                 
@@ -422,10 +400,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/10/09/RUST%E5%8F%98%E9%87%8F%E4%B8%8E%E5%8F%AF%E5%8F%98%E7%B1%BB%E5%9E%8B/">RUST变量与可变类型</a>
             
-            
-            <a class="next" rel="next" href="/2024/10/05/hello-world/">Hello World</a>
+            <a class="next" rel="next" href="/2024/10/06/Rust%E4%BB%8B%E7%BB%8D%E5%92%8C%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">Rust01_介绍和环境配置</a>
             
         </section>
 
