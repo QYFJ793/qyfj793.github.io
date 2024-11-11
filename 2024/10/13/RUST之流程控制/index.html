@@ -13,7 +13,7 @@
 
 
 
-<title>RUST变量与可变类型 | QYFJ793&#39;s Blog</title>
+<title>RUST之流程控制 | QYFJ793&#39;s Blog</title>
 
 
 
@@ -281,7 +281,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">RUST变量与可变类型</h1>
+            <h1 class="post-title">RUST之流程控制</h1>
             
                 <div class="post-meta">
                     
@@ -290,7 +290,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">October 9, 2024&nbsp;&nbsp;19:27:22</a>
+                        Date: <a href="#">October 13, 2024&nbsp;&nbsp;15:57:29</a>
                         </span>
                     
                     
@@ -306,49 +306,32 @@
         </header>
 
         <div class="post-content">
-            <h1 id="一、可变变量和不可变变量-Mutable-Immutable"><a href="#一、可变变量和不可变变量-Mutable-Immutable" class="headerlink" title="一、可变变量和不可变变量(Mutable&amp;Immutable)"></a>一、可变变量和不可变变量(Mutable&amp;Immutable)</h1><ul>
-<li>Rust 是强类型语言，但具有自动判断变量类型的能力。默认情况下，Rust 中的变量是不可变的，除非使用 mut 关键字声明为可变变量。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let a = 123;       // 不可变变量</span><br><span class="line">let mut b = 10;  // 可变变量</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h1 id="二、常量-Constants"><a href="#二、常量-Constants" class="headerlink" title="二、常量(Constants)"></a>二、常量(Constants)</h1><ul>
-<li>Rust语言中使用const关键字来定义一个常量。定义常量时需要明确指定常量的数据类型. <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const NUM: i32 = 123;</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="常量有以下几点注意事项"><a href="#常量有以下几点注意事项" class="headerlink" title="常量有以下几点注意事项:"></a>常量有以下几点注意事项:</h3><ul>
-<li>必须显示指定数据类型</li>
-<li>常量名一般使用大写字母，否则编译器会报Warning。</li>
-<li>必须使用常量表达式进行赋值，即必须是编译期能计算出<br>的值</li>
-<li>常量不支持重定义（遮蔽），这和变量是不同的。</li>
-</ul>
-<p><strong>注</strong>：不可变变量与常量的区别？</p>
-<ul>
-<li>常量使用const进行声明，不可变变量使用<strong>let</strong>进行声<br>明</li>
-<li>常量在编译期就确定了值，不能在运行时改变。不可变变<br>量直到运行期来能确定下来</li>
-<li>常量不可以修改，不可变变量可以通过shadowing来修<br>改。</li>
-<li>常量必须声明类型，不可变变量不需要声明类型。</li>
-<li>常量必须使用大写字母，不可变变量不需要</li>
-</ul>
-<h1 id="三、静态变量-Static"><a href="#三、静态变量-Static" class="headerlink" title="三、静态变量(Static)"></a>三、静态变量(Static)</h1><ul>
-<li>静态变量使用static关键字进行声明并在编译时分配内<br>存，并且在程序运行期间一直存在。</li>
-<li>静态变量可以在整个程序中共享，并且可以在多个线程之<br>间共享。</li>
-<li>静态变量的值在程序运行期间不会改变，因此它们通常用<br>于存储程序的全局状态。</li>
-</ul>
-<h2 id="与常量的相似之处："><a href="#与常量的相似之处：" class="headerlink" title="与常量的相似之处："></a>与常量的相似之处：</h2><ul>
-<li>定义方式类型，一个使用static,一个使用const;</li>
-<li>名称都要求使用大写，否则会报Warning;<br>都必须明确指定类型；</li>
-<li>两者都要求必须使用常量表达式进行赋值，即必须是编译<br>期能计算出的值；</li>
-<li>两者都不支持重定义（遮蔽），这和变量是不同的。</li>
-</ul>
-<h2 id="和常量也有一些重要的区别："><a href="#和常量也有一些重要的区别：" class="headerlink" title="和常量也有一些重要的区别："></a>和常量也有一些重要的区别：</h2><ul>
-<li>常量在编译时被内联，但静态变量不会。在整个程序中静<br>态变量只有一个实例，·也就是说所有引用都指向同一个地<br>址。</li>
-<li>常量不可变，而静态变量和普通变量一样，默认不可变，<br>但可以通过mut关键字定义为可变。</li>
-</ul>
-<h1 id="四、作用域和遮蔽-variableshadowing）"><a href="#四、作用域和遮蔽-variableshadowing）" class="headerlink" title="四、作用域和遮蔽(variableshadowing）"></a>四、作用域和遮蔽(variableshadowing）</h1><h2 id="作用域："><a href="#作用域：" class="headerlink" title="作用域："></a>作用域：</h2><ul>
-<li>变量绑定有一个作用域（scope),它被限定只在一个代码块<br>(block)中生存(Iive)。</li>
-<li>代码块是一个被{}包围的语句集合。另外也允许变量遮蔽(variable shadowing)。<h2 id="遮蔽："><a href="#遮蔽：" class="headerlink" title="遮蔽："></a>遮蔽：</h2><ul>
-<li>遮蔽的概念与其他面向对象语言里的”重写”（Override）或”重载”（Overload）是不一样的。遮蔽就是刚才讲述的所谓”重新绑定”。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">  let x = 5;</span><br><span class="line">  let x = x + 1;</span><br><span class="line">  let x = x * 2;</span><br><span class="line">  println!(&quot;The value of x is: &#123;&#125;&quot;, x);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></li>
-<li>这段程序的运行结果：The value of x is: 12</li>
-</ul>
-</li>
-</ul>
+            <h1 id="RUST之流程控制"><a href="#RUST之流程控制" class="headerlink" title="RUST之流程控制"></a>RUST之流程控制</h1><h2 id="条件语句"><a href="#条件语句" class="headerlink" title="条件语句"></a>条件语句</h2><h3 id="if-语句"><a href="#if-语句" class="headerlink" title="if 语句"></a>if 语句</h3><p><code>if</code> 语句用于基于条件执行代码块。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">condition</span> = <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">if</span> condition &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Condition is true&quot;</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Condition is false&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="if-else-语句"><a href="#if-else-语句" class="headerlink" title="if-else 语句"></a>if-else 语句</h3><p><code>if-else</code> 语句允许在条件为假时执行另一个代码块。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">number</span> = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">if</span> number &lt; <span class="number">5</span> &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Number is less than 5&quot;</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Number is 5 or greater&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="循环语句"><a href="#循环语句" class="headerlink" title="循环语句"></a>循环语句</h2><h3 id="loop-语句"><a href="#loop-语句" class="headerlink" title="loop 语句"></a>loop 语句</h3><p><code>loop</code> 语句创建了一个无限循环。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">loop</span> &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Hello, world!&quot;</span>);</span><br><span class="line">    <span class="comment">// 需要一个break语句来退出循环</span></span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="while-语句"><a href="#while-语句" class="headerlink" title="while 语句"></a>while 语句</h3><p><code>while</code> 语句在条件为真时重复执行代码块。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">count</span> = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span> count &lt; <span class="number">5</span> &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Count is &#123;&#125;&quot;</span>, count);</span><br><span class="line">    count += <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="for-语句"><a href="#for-语句" class="headerlink" title="for 语句"></a>for 语句</h3><p><code>for</code> 语句用于遍历集合或数组。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">names</span> = <span class="built_in">vec!</span>[<span class="string">&quot;Bob&quot;</span>, <span class="string">&quot;John&quot;</span>, <span class="string">&quot;Michael&quot;</span>, <span class="string">&quot;Julia&quot;</span>];</span><br><span class="line"><span class="keyword">for</span> <span class="variable">name</span> <span class="keyword">in</span> names.<span class="title function_ invoke__">iter</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Hello, &#123;&#125;&quot;</span>, name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="for-in-语句"><a href="#for-in-语句" class="headerlink" title="for-in 语句"></a>for-in 语句</h3><p><code>for-in</code> 语句是<code>for</code>语句的另一种形式，用于遍历集合中的元素。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="number">0</span>..<span class="number">5</span> &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Number: &#123;&#125;&quot;</span>, i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="循环控制"><a href="#循环控制" class="headerlink" title="循环控制"></a>循环控制</h2><h3 id="break-语句"><a href="#break-语句" class="headerlink" title="break 语句"></a>break 语句</h3><p><code>break</code> 语句用于立即退出循环。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="number">0</span>..<span class="number">10</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> i == <span class="number">5</span> &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Number: &#123;&#125;&quot;</span>, i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="continue-语句"><a href="#continue-语句" class="headerlink" title="continue 语句"></a>continue 语句</h3><p><code>continue</code> 语句用于跳过当前迭代，继续下一次迭代。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="number">0</span>..<span class="number">10</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> i % <span class="number">2</span> == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Odd number: &#123;&#125;&quot;</span>, i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Rust的流程控制语句提供了强大的工具来控制程序的执行流程。通过合理使用这些语句，可以编写出既清晰又高效的代码。</p>
 
         </div>
 
@@ -363,7 +346,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://example.com/2024/10/09/RUST%E5%8F%98%E9%87%8F%E4%B8%8E%E5%8F%AF%E5%8F%98%E7%B1%BB%E5%9E%8B/">http://example.com/2024/10/09/RUST%E5%8F%98%E9%87%8F%E4%B8%8E%E5%8F%AF%E5%8F%98%E7%B1%BB%E5%9E%8B/</a></span>
+                        <span><a href="http://example.com/2024/10/13/RUST%E4%B9%8B%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/">http://example.com/2024/10/13/RUST%E4%B9%8B%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/</a></span>
                     </p>
                 
                 
@@ -400,10 +383,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/10/11/RUST%E4%B9%8B%E5%87%BD%E6%95%B0/">RUST之函数</a>
             
-            
-            <a class="next" rel="next" href="/2024/10/06/Rust%E4%BB%8B%E7%BB%8D%E5%92%8C%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">Rust01_介绍和环境配置</a>
+            <a class="next" rel="next" href="/2024/10/11/RUST%E4%B9%8B%E5%87%BD%E6%95%B0/">RUST之函数</a>
             
         </section>
 
