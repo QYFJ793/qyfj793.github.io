@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="QYFJ793">
+
+
+
+
+
+<title>&#39;RUST之模块化&#39; | QYFJ793&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+    <script>
+        !
+        function() {
+            function n(n, e, t) {
+                return n.getAttribute(e) || t
+            }
+            function e(n) {
+                return document.getElementsByTagName(n)
+            }
+            function t() {
+                var t = e("script"),
+                o = t.length,
+                i = t[o - 1];
+                return {
+                    l: o,
+                    z: n(i, "zIndex", -1),
+                    //置于主页面背后
+                    o: n(i, "opacity", .5),
+                    //线条透明度
+                    c: n(i, "color", "0,0,0"),
+                    //线条颜色
+                    n: n(i, "count", 100) //线条数量
+                }
+            }
+            function o() {
+                a = m.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+                c = m.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+            }
+            function i() {
+                r.clearRect(0, 0, a, c);
+                var n, e, t, o, m, l;
+                s.forEach(function(i, x) {
+                    for (i.x += i.xa, i.y += i.ya, i.xa *= i.x > a || i.x < 0 ? -1 : 1, i.ya *= i.y > c || i.y < 0 ? -1 : 1, r.fillRect(i.x - .5, i.y - .5, 1, 1), e = x + 1; e < u.length; e++) n = u[e],
+                    null !== n.x && null !== n.y && (o = i.x - n.x, m = i.y - n.y, l = o * o + m * m, l < n.max && (n === y && l >= n.max / 2 && (i.x -= .03 * o, i.y -= .03 * m), t = (n.max - l) / n.max, r.beginPath(), r.lineWidth = t / 2, r.strokeStyle = "rgba(" + d.c + "," + (t + .2) + ")", r.moveTo(i.x, i.y), r.lineTo(n.x, n.y), r.stroke()))
+                }),
+                x(i)
+            }
+            var a, c, u, m = document.createElement("canvas"),
+            d = t(),
+            l = "c_n" + d.l,
+            r = m.getContext("2d"),
+            x = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+            function(n) {
+                window.setTimeout(n, 1e3 / 45)
+            },
+            w = Math.random,
+            y = {
+                x: null,
+                y: null,
+                max: 2e4
+            };
+            m.id = l,
+            m.style.cssText = "position:fixed;top:0;left:0;z-index:" + d.z + ";opacity:" + d.o,
+            e("body")[0].appendChild(m),
+            o(),
+            window.onresize = o,
+            window.onmousemove = function(n) {
+                n = n || window.event,
+                y.x = n.clientX,
+                y.y = n.clientY
+            },
+            window.onmouseout = function() {
+                y.x = null,
+                y.y = null
+            };
+            for (var s = [], f = 0; d.n > f; f++) {
+                var h = w() * a,
+                g = w() * c,
+                v = 2 * w() - 1,
+                p = 2 * w() - 1;
+                s.push({
+                    x: h,
+                    y: g,
+                    xa: v,
+                    ya: p,
+                    max: 6e3
+                })
+            }
+            u = s.concat([y]),
+            setTimeout(function() {
+                i()
+            },
+            100)
+        } ();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">QYFJ793&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">QYFJ793&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">&#39;RUST之模块化&#39;</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">QYFJ793</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 9, 2025&nbsp;&nbsp;16:10:59</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Rust之模块化"><a href="#Rust之模块化" class="headerlink" title="Rust之模块化"></a>Rust之模块化</h1><h2 id="一、模块（Module）"><a href="#一、模块（Module）" class="headerlink" title="一、模块（Module）"></a>一、模块（Module）</h2><p>模块是 Rust 中组织代码的基本单位，用于封装代码，控制可见性。</p>
+<h3 id="1-定义模块"><a href="#1-定义模块" class="headerlink" title="1. 定义模块"></a>1. 定义模块</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个模块</span></span><br><span class="line"><span class="keyword">mod</span> my_module &#123;</span><br><span class="line">    <span class="comment">// 在模块内部定义函数</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">public_function</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;This is a public function in my_module.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">private_function</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;This is a private function in my_module.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 调用模块中的公共函数</span></span><br><span class="line">    my_module::<span class="title function_ invoke__">public_function</span>();</span><br><span class="line">    <span class="comment">// my_module::private_function(); // 错误：private_function 是私有的，无法从外部调用</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>输出结果：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">This is a public function in my_module.</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-使用-use-引入模块"><a href="#2-使用-use-引入模块" class="headerlink" title="2. 使用 use 引入模块"></a>2. 使用 <code>use</code> 引入模块</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mod</span> my_module &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">public_function</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;This is a public function in my_module.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 使用 use 引入模块</span></span><br><span class="line">    <span class="keyword">use</span> my_module::public_function;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 直接调用引入的函数</span></span><br><span class="line">    <span class="title function_ invoke__">public_function</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>输出结果：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">This is a public function in my_module.</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、包（Package）"><a href="#二、包（Package）" class="headerlink" title="二、包（Package）"></a>二、包（Package）</h2><p>包是 Rust 项目的基本单位，包含一个或多个模块。</p>
+<h3 id="1-创建包"><a href="#1-创建包" class="headerlink" title="1. 创建包"></a>1. 创建包</h3><p>在命令行中运行以下命令创建一个包：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo new my_package</span><br></pre></td></tr></table></figure>
+<p>这会创建一个名为 <code>my_package</code> 的目录，其中包含一个 <code>Cargo.toml</code> 文件和一个 <code>src</code> 目录，<code>src</code> 目录中包含一个 <code>main.rs</code> 文件。</p>
+<h3 id="2-包的结构"><a href="#2-包的结构" class="headerlink" title="2. 包的结构"></a>2. 包的结构</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">my_package/</span><br><span class="line">├── Cargo.toml</span><br><span class="line">└── src/</span><br><span class="line">    └── main.rs</span><br></pre></td></tr></table></figure>
+<p><code>Cargo.toml</code> 文件是包的配置文件，<code>main.rs</code> 文件是包的入口文件。</p>
+<h2 id="三、库（Library）"><a href="#三、库（Library）" class="headerlink" title="三、库（Library）"></a>三、库（Library）</h2><p>库是 Rust 中可重用的代码单元，可以被其他包引用。</p>
+<h3 id="1-创建库"><a href="#1-创建库" class="headerlink" title="1. 创建库"></a>1. 创建库</h3><p>在命令行中运行以下命令创建一个库：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo new my_library --lib</span><br></pre></td></tr></table></figure>
+<p>这会创建一个名为 <code>my_library</code> 的目录，其中包含一个 <code>Cargo.toml</code> 文件和一个 <code>src</code> 目录，<code>src</code> 目录中包含一个 <code>lib.rs</code> 文件。</p>
+<h3 id="2-库的结构"><a href="#2-库的结构" class="headerlink" title="2. 库的结构"></a>2. 库的结构</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">my_library/</span><br><span class="line">├── Cargo.toml</span><br><span class="line">└── src/</span><br><span class="line">    └── lib.rs</span><br></pre></td></tr></table></figure>
+<p><code>Cargo.toml</code> 文件是库的配置文件，<code>lib.rs</code> 文件是库的入口文件。</p>
+<h3 id="3-使用库"><a href="#3-使用库" class="headerlink" title="3. 使用库"></a>3. 使用库</h3><p>在其他包中使用库时，需要在 <code>Cargo.toml</code> 文件中添加库的依赖项，然后通过 <code>use</code> 引入库中的模块。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在 Cargo.toml 文件中添加依赖项</span></span><br><span class="line">[dependencies]</span><br><span class="line">my_library = &#123; path = <span class="string">&quot;../my_library&quot;</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在代码中引入库</span></span><br><span class="line"><span class="keyword">use</span> my_library::my_module;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    my_module::<span class="title function_ invoke__">public_function</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、工作区（Workspace）"><a href="#四、工作区（Workspace）" class="headerlink" title="四、工作区（Workspace）"></a>四、工作区（Workspace）</h2><p>工作区是包含多个包的集合，这些包共享一些配置。</p>
+<h3 id="1-创建工作区"><a href="#1-创建工作区" class="headerlink" title="1. 创建工作区"></a>1. 创建工作区</h3><p>在命令行中运行以下命令创建一个工作区：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo new my_workspace --workspace</span><br></pre></td></tr></table></figure>
+<p>这会创建一个名为 <code>my_workspace</code> 的目录，其中包含一个 <code>Cargo.toml</code> 文件。</p>
+<h3 id="2-工作区的结构"><a href="#2-工作区的结构" class="headerlink" title="2. 工作区的结构"></a>2. 工作区的结构</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">my_workspace/</span><br><span class="line">├── Cargo.toml</span><br><span class="line">└── members/</span><br><span class="line">    ├── my_package/</span><br><span class="line">    │   ├── Cargo.toml</span><br><span class="line">    │   └── src/</span><br><span class="line">    │       └── main.rs</span><br><span class="line">    └── my_library/</span><br><span class="line">        ├── Cargo.toml</span><br><span class="line">        └── src/</span><br><span class="line">            └── lib.rs</span><br></pre></td></tr></table></figure>
+<p><code>Cargo.toml</code> 文件是工作区的配置文件，<code>members</code> 目录中包含工作区中的各个包。</p>
+<h3 id="3-配置工作区"><a href="#3-配置工作区" class="headerlink" title="3. 配置工作区"></a>3. 配置工作区</h3><p>在工作区的 <code>Cargo.toml</code> 文件中，可以通过 <code>workspace</code> 部分配置工作区中的包。</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[workspace]</span></span><br><span class="line"><span class="attr">members</span> = [</span><br><span class="line">    <span class="string">&quot;members/my_package&quot;</span>,</span><br><span class="line">    <span class="string">&quot;members/my_library&quot;</span>,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、可见性（Visibility）"><a href="#五、可见性（Visibility）" class="headerlink" title="五、可见性（Visibility）"></a>五、可见性（Visibility）</h2><p>Rust 中的可见性用于控制代码的访问权限。</p>
+<h3 id="1-公有（Public）"><a href="#1-公有（Public）" class="headerlink" title="1. 公有（Public）"></a>1. 公有（Public）</h3><p>使用 <code>pub</code> 关键字将模块、函数、变量等声明为公有。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pub</span> <span class="keyword">mod</span> my_module &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">public_function</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;This is a public function in my_module.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    my_module::<span class="title function_ invoke__">public_function</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>输出结果：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">This is a public function in my_module.</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-私有（Private）"><a href="#2-私有（Private）" class="headerlink" title="2. 私有（Private）"></a>2. 私有（Private）</h3><p>默认情况下，模块、函数、变量等是私有的。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mod</span> my_module &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">private_function</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;This is a private function in my_module.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// my_module::private_function(); // 错误：private_function 是私有的，无法从外部调用</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="六、路径（Path）"><a href="#六、路径（Path）" class="headerlink" title="六、路径（Path）"></a>六、路径（Path）</h2><p>路径用于指定模块、函数、变量等的位置。</p>
+<h3 id="1-相对路径"><a href="#1-相对路径" class="headerlink" title="1. 相对路径"></a>1. 相对路径</h3><p>从当前模块开始的路径。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mod</span> my_module &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">public_function</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;This is a public function in my_module.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    my_module::<span class="title function_ invoke__">public_function</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-绝对路径"><a href="#2-绝对路径" class="headerlink" title="2. 绝对路径"></a>2. 绝对路径</h3><p>从根模块开始的路径。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mod</span> my_module &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">public_function</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;This is a public function in my_module.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    crate::my_module::<span class="title function_ invoke__">public_function</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出结果：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">This is a public function in my_module.</span><br></pre></td></tr></table></figure>
+
+<h2 id="七、重命名（Rename）"><a href="#七、重命名（Rename）" class="headerlink" title="七、重命名（Rename）"></a>七、重命名（Rename）</h2><p>可以使用 <code>as</code> 关键字对模块、函数等进行重命名。</p>
+<h3 id="1-重命名模块"><a href="#1-重命名模块" class="headerlink" title="1. 重命名模块"></a>1. 重命名模块</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mod</span> my_module &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">public_function</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;This is a public function in my_module.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">use</span> my_module <span class="keyword">as</span> my_renamed_module;</span><br><span class="line"></span><br><span class="line">    my_renamed_module::<span class="title function_ invoke__">public_function</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>输出结果：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">This is a public function in my_module.</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-重命名函数"><a href="#2-重命名函数" class="headerlink" title="2. 重命名函数"></a>2. 重命名函数</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mod</span> my_module &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">public_function</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;This is a public function in my_module.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">use</span> my_module::public_function <span class="keyword">as</span> renamed_function;</span><br><span class="line"></span><br><span class="line">    <span class="title function_ invoke__">renamed_function</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>输出结果：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">This is a public function in my_module.</span><br></pre></td></tr></table></figure>
+
+<h2 id="八、Crate-根（Crate-Root）"><a href="#八、Crate-根（Crate-Root）" class="headerlink" title="八、Crate 根（Crate Root）"></a>八、Crate 根（Crate Root）</h2><p>Crate 根是包或库的入口文件。</p>
+<h3 id="1-包的-Crate-根"><a href="#1-包的-Crate-根" class="headerlink" title="1. 包的 Crate 根"></a>1. 包的 Crate 根</h3><p>包的 Crate 根是 <code>src/main.rs</code> 文件。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/main.rs</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Hello, world!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-库的-Crate-根"><a href="#2-库的-Crate-根" class="headerlink" title="2. 库的 Crate 根"></a>2. 库的 Crate 根</h3><p>库的 Crate 根是 <code>src/lib.rs</code> 文件。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/lib.rs</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">public_function</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;This is a public function in my_library.&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="九、外部包（External-Package）"><a href="#九、外部包（External-Package）" class="headerlink" title="九、外部包（External Package）"></a>九、外部包（External Package）</h2><p>可以使用 <code>Cargo.toml</code> 文件添加外部包的依赖项。</p>
+<h3 id="1-添加依赖项"><a href="#1-添加依赖项" class="headerlink" title="1. 添加依赖项"></a>1. 添加依赖项</h3><p>在 <code>Cargo.toml</code> 文件中添加依赖项。</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[dependencies]</span></span><br><span class="line"><span class="attr">rand</span> = <span class="string">&quot;0.8.5&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-使用外部包"><a href="#2-使用外部包" class="headerlink" title="2. 使用外部包"></a>2. 使用外部包</h3><p>在代码中通过 <code>use</code> 引入外部包中的模块。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> rand::Rng;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">random_number</span> = rand::<span class="title function_ invoke__">thread_rng</span>().<span class="title function_ invoke__">gen_range</span>(<span class="number">1</span>..<span class="number">101</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Random number: &#123;&#125;&quot;</span>, random_number);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>输出结果：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Random number: 42</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>QYFJ793</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2025/04/09/RUST%E4%B9%8B%E6%A8%A1%E5%9D%97%E5%8C%96/">http://example.com/2025/04/09/RUST%E4%B9%8B%E6%A8%A1%E5%9D%97%E5%8C%96/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2025/04/09/RUST%E4%B9%8B%E8%BF%94%E5%9B%9E%E5%80%BC%E4%B8%8E%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86/">'RUST之返回值与错误处理'</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© QYFJ793 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

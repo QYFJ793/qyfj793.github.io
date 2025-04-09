@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="QYFJ793">
+
+
+
+
+
+<title>&#39;RUST之模式匹配&#39; | QYFJ793&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+    <script>
+        !
+        function() {
+            function n(n, e, t) {
+                return n.getAttribute(e) || t
+            }
+            function e(n) {
+                return document.getElementsByTagName(n)
+            }
+            function t() {
+                var t = e("script"),
+                o = t.length,
+                i = t[o - 1];
+                return {
+                    l: o,
+                    z: n(i, "zIndex", -1),
+                    //置于主页面背后
+                    o: n(i, "opacity", .5),
+                    //线条透明度
+                    c: n(i, "color", "0,0,0"),
+                    //线条颜色
+                    n: n(i, "count", 100) //线条数量
+                }
+            }
+            function o() {
+                a = m.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+                c = m.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+            }
+            function i() {
+                r.clearRect(0, 0, a, c);
+                var n, e, t, o, m, l;
+                s.forEach(function(i, x) {
+                    for (i.x += i.xa, i.y += i.ya, i.xa *= i.x > a || i.x < 0 ? -1 : 1, i.ya *= i.y > c || i.y < 0 ? -1 : 1, r.fillRect(i.x - .5, i.y - .5, 1, 1), e = x + 1; e < u.length; e++) n = u[e],
+                    null !== n.x && null !== n.y && (o = i.x - n.x, m = i.y - n.y, l = o * o + m * m, l < n.max && (n === y && l >= n.max / 2 && (i.x -= .03 * o, i.y -= .03 * m), t = (n.max - l) / n.max, r.beginPath(), r.lineWidth = t / 2, r.strokeStyle = "rgba(" + d.c + "," + (t + .2) + ")", r.moveTo(i.x, i.y), r.lineTo(n.x, n.y), r.stroke()))
+                }),
+                x(i)
+            }
+            var a, c, u, m = document.createElement("canvas"),
+            d = t(),
+            l = "c_n" + d.l,
+            r = m.getContext("2d"),
+            x = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+            function(n) {
+                window.setTimeout(n, 1e3 / 45)
+            },
+            w = Math.random,
+            y = {
+                x: null,
+                y: null,
+                max: 2e4
+            };
+            m.id = l,
+            m.style.cssText = "position:fixed;top:0;left:0;z-index:" + d.z + ";opacity:" + d.o,
+            e("body")[0].appendChild(m),
+            o(),
+            window.onresize = o,
+            window.onmousemove = function(n) {
+                n = n || window.event,
+                y.x = n.clientX,
+                y.y = n.clientY
+            },
+            window.onmouseout = function() {
+                y.x = null,
+                y.y = null
+            };
+            for (var s = [], f = 0; d.n > f; f++) {
+                var h = w() * a,
+                g = w() * c,
+                v = 2 * w() - 1,
+                p = 2 * w() - 1;
+                s.push({
+                    x: h,
+                    y: g,
+                    xa: v,
+                    ya: p,
+                    max: 6e3
+                })
+            }
+            u = s.concat([y]),
+            setTimeout(function() {
+                i()
+            },
+            100)
+        } ();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">QYFJ793&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">QYFJ793&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">&#39;RUST之模式匹配&#39;</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">QYFJ793</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 9, 2025&nbsp;&nbsp;16:05:22</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Rust-模式匹配"><a href="#Rust-模式匹配" class="headerlink" title="Rust 模式匹配"></a>Rust 模式匹配</h1><h2 id="一、模式匹配简介"><a href="#一、模式匹配简介" class="headerlink" title="一、模式匹配简介"></a>一、模式匹配简介</h2><p>模式匹配（Pattern Matching）是 Rust 中一种强大的语言特性，它允许我们根据不同的模式来执行不同的代码。它通常用于处理枚举类型、元组、结构体等数据结构，可以方便地对数据进行解构和匹配。</p>
+<h2 id="二、基本语法"><a href="#二、基本语法" class="headerlink" title="二、基本语法"></a>二、基本语法</h2><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">match</span> 表达式 &#123;</span><br><span class="line">    模式<span class="number">1</span> =&gt; 表达式<span class="number">1</span>,</span><br><span class="line">    模式<span class="number">2</span> =&gt; 表达式<span class="number">2</span>,</span><br><span class="line">    ...</span><br><span class="line">    _ =&gt; 默认表达式, <span class="comment">// _ 表示匹配所有其他情况</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="示例：匹配整数"><a href="#示例：匹配整数" class="headerlink" title="示例：匹配整数"></a>示例：匹配整数</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">number</span> = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> number &#123;</span><br><span class="line">        <span class="number">1</span> =&gt; <span class="built_in">println!</span>(<span class="string">&quot;One&quot;</span>),</span><br><span class="line">        <span class="number">2</span> =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Two&quot;</span>),</span><br><span class="line">        <span class="number">3</span> =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Three&quot;</span>),</span><br><span class="line">        _ =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Other&quot;</span>), <span class="comment">// 匹配其他所有值</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>：在这个例子中，<code>match</code> 关键字用于匹配变量 <code>number</code> 的值。当 <code>number</code> 的值为 1 时，执行 <code>println!(&quot;One&quot;)</code>；当值为 2 时，执行 <code>println!(&quot;Two&quot;)</code>；以此类推。如果值不是 1、2 或 3，则执行 <code>_ =&gt; println!(&quot;Other&quot;)</code>，<code>_</code> 是一个通配符，表示匹配所有其他情况。</p>
+<h2 id="三、匹配枚举类型"><a href="#三、匹配枚举类型" class="headerlink" title="三、匹配枚举类型"></a>三、匹配枚举类型</h2><p>枚举（Enum）是 Rust 中一种用于定义可变数据类型的方式。模式匹配与枚举结合使用可以方便地处理不同的枚举变体。</p>
+<h3 id="示例：匹配枚举"><a href="#示例：匹配枚举" class="headerlink" title="示例：匹配枚举"></a>示例：匹配枚举</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">IpAddrKind</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">V4</span>(<span class="type">u8</span>, <span class="type">u8</span>, <span class="type">u8</span>, <span class="type">u8</span>),</span><br><span class="line">    <span class="title function_ invoke__">V6</span>(<span class="type">String</span>),</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">home</span> = IpAddrKind::<span class="title function_ invoke__">V4</span>(<span class="number">127</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">loopback</span> = IpAddrKind::<span class="title function_ invoke__">V6</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;::1&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> home &#123;</span><br><span class="line">        IpAddrKind::<span class="title function_ invoke__">V4</span>(a, b, c, d) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;IPv4 address: &#123;&#125;.&#123;&#125;.&#123;&#125;.&#123;&#125;&quot;</span>, a, b, c, d),</span><br><span class="line">        IpAddrKind::<span class="title function_ invoke__">V6</span>(addr) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;IPv6 address: &#123;&#125;&quot;</span>, addr),</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> loopback &#123;</span><br><span class="line">        IpAddrKind::<span class="title function_ invoke__">V4</span>(a, b, c, d) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;IPv4 address: &#123;&#125;.&#123;&#125;.&#123;&#125;.&#123;&#125;&quot;</span>, a, b, c, d),</span><br><span class="line">        IpAddrKind::<span class="title function_ invoke__">V6</span>(addr) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;IPv6 address: &#123;&#125;&quot;</span>, addr),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>：<code>IpAddrKind</code> 是一个枚举类型，它有两个变体：<code>V4</code> 和 <code>V6</code>。<code>V4</code> 变体包含四个 <code>u8</code> 类型的字段，表示 IPv4 地址的四个部分；<code>V6</code> 变体包含一个 <code>String</code> 类型的字段，表示 IPv6 地址。在 <code>match</code> 表达式中，我们通过模式匹配来解构枚举变体，并提取其中的字段值。例如，当匹配到 <code>IpAddrKind::V4(a, b, c, d)</code> 时，<code>a</code>、<code>b</code>、<code>c</code> 和 <code>d</code> 分别被绑定到 <code>V4</code> 变体的四个字段值上，然后可以使用这些绑定的变量来构造 IPv4 地址的字符串。</p>
+<h2 id="四、匹配元组"><a href="#四、匹配元组" class="headerlink" title="四、匹配元组"></a>四、匹配元组</h2><p>元组（Tuple）是一种可以包含多个不同类型值的数据结构。模式匹配可以用于解构元组中的值。</p>
+<h3 id="示例：匹配元组"><a href="#示例：匹配元组" class="headerlink" title="示例：匹配元组"></a>示例：匹配元组</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">point</span> = (<span class="number">3</span>, <span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> point &#123;</span><br><span class="line">        (<span class="number">0</span>, <span class="number">0</span>) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Origin&quot;</span>),</span><br><span class="line">        (x, <span class="number">0</span>) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;On the x-axis at x = &#123;&#125;&quot;</span>, x),</span><br><span class="line">        (<span class="number">0</span>, y) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;On the y-axis at y = &#123;&#125;&quot;</span>, y),</span><br><span class="line">        (x, y) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;At point (&#123;&#125;, &#123;&#125;)&quot;</span>, x, y),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>：<code>point</code> 是一个包含两个整数值的元组。在 <code>match</code> 表达式中，我们通过模式匹配来解构元组中的值。例如，<code>(0, 0)</code> 匹配元组的值为 <code>(0, 0)</code> 的情况；<code>(x, 0)</code> 匹配元组的第一个值为任意值（通过变量 <code>x</code> 绑定），第二个值为 0 的情况；<code>(0, y)</code> 匹配元组的第一个值为 0，第二个值为任意值（通过变量 <code>y</code> 绑定）的情况；<code>(x, y)</code> 匹配元组的两个值分别为任意值（通过变量 <code>x</code> 和 <code>y</code> 绑定）的情况。</p>
+<h2 id="五、匹配结构体"><a href="#五、匹配结构体" class="headerlink" title="五、匹配结构体"></a>五、匹配结构体</h2><p>结构体（Struct）是一种自定义的数据类型，用于存储相关数据。模式匹配可以用于解构结构体中的字段。</p>
+<h3 id="示例：匹配结构体"><a href="#示例：匹配结构体" class="headerlink" title="示例：匹配结构体"></a>示例：匹配结构体</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> &#123;</span><br><span class="line">    x: <span class="type">i32</span>,</span><br><span class="line">    y: <span class="type">i32</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">p</span> = Point &#123; x: <span class="number">0</span>, y: <span class="number">7</span> &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> p &#123;</span><br><span class="line">        Point &#123; x, y: <span class="number">0</span> &#125; =&gt; <span class="built_in">println!</span>(<span class="string">&quot;On the x-axis at x = &#123;&#125;&quot;</span>, x),</span><br><span class="line">        Point &#123; x: <span class="number">0</span>, y &#125; =&gt; <span class="built_in">println!</span>(<span class="string">&quot;On the y-axis at y = &#123;&#125;&quot;</span>, y),</span><br><span class="line">        Point &#123; x, y &#125; =&gt; <span class="built_in">println!</span>(<span class="string">&quot;At point (&#123;&#125;, &#123;&#125;)&quot;</span>, x, y),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>：<code>Point</code> 是一个结构体，包含两个字段 <code>x</code> 和 <code>y</code>。在 <code>match</code> 表达式中，我们通过模式匹配来解构结构体中的字段。例如，<code>Point &#123; x, y: 0 &#125;</code> 匹配结构体的 <code>y</code> 字段值为 0，<code>x</code> 字段值为任意值（通过变量 <code>x</code> 绑定）的情况；<code>Point &#123; x: 0, y &#125;</code> 匹配结构体的 <code>x</code> 字段值为 0，<code>y</code> 字段值为任意值（通过变量 <code>y</code> 绑定）的情况；<code>Point &#123; x, y &#125;</code> 匹配结构体的两个字段分别为任意值（通过变量 <code>x</code> 和 <code>y</code> 绑定）的情况。</p>
+<h2 id="六、模式匹配的守卫"><a href="#六、模式匹配的守卫" class="headerlink" title="六、模式匹配的守卫"></a>六、模式匹配的守卫</h2><p>模式匹配的守卫（Guard）是一种额外的条件，用于在匹配模式时进行更精细的控制。只有当模式匹配成功且守卫条件为真时，才会执行对应的分支。</p>
+<h3 id="示例：使用守卫"><a href="#示例：使用守卫" class="headerlink" title="示例：使用守卫"></a>示例：使用守卫</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">num</span> = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> num &#123;</span><br><span class="line">        x <span class="keyword">if</span> x &lt; <span class="number">5</span> =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Less than 5&quot;</span>),</span><br><span class="line">        x <span class="keyword">if</span> x == <span class="number">5</span> =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Equal to 5&quot;</span>),</span><br><span class="line">        x <span class="keyword">if</span> x &gt; <span class="number">5</span> =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Greater than 5&quot;</span>),</span><br><span class="line">        _ =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Other&quot;</span>),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>：在这个例子中，<code>if</code> 关键字用于指定守卫条件。例如，<code>x if x &lt; 5</code> 表示只有当 <code>num</code> 的值小于 5 时，才会执行 <code>println!(&quot;Less than 5&quot;)</code>。如果 <code>num</code> 的值不满足任何守卫条件，则执行 <code>_ =&gt; println!(&quot;Other&quot;)</code>。</p>
+<h2 id="七、绑定变量"><a href="#七、绑定变量" class="headerlink" title="七、绑定变量"></a>七、绑定变量</h2><p>在模式匹配中，可以通过 <code>@</code> 符号将匹配到的值绑定到一个变量上，以便在匹配分支中使用。</p>
+<h3 id="示例：绑定变量"><a href="#示例：绑定变量" class="headerlink" title="示例：绑定变量"></a>示例：绑定变量</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">point</span> = (<span class="number">3</span>, <span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> point &#123;</span><br><span class="line">        (x @ <span class="number">0</span>, y) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;x is 0, y is &#123;&#125;&quot;</span>, y),</span><br><span class="line">        (x, y @ <span class="number">0</span>) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;x is &#123;&#125;, y is 0&quot;</span>, x),</span><br><span class="line">        (x, y) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;x is &#123;&#125;, y is &#123;&#125;&quot;</span>, x, y),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>：在这个例子中，<code>x @ 0</code> 表示将匹配到的值 0 绑定到变量 <code>x</code> 上；<code>y @ 0</code> 表示将匹配到的值 0 绑定到变量 <code>y</code> 上。这样可以在匹配分支中同时使用绑定的变量和匹配到的值。</p>
+<h2 id="八、match-嵌套"><a href="#八、match-嵌套" class="headerlink" title="八、match 嵌套"></a>八、<code>match</code> 嵌套</h2><p><code>match</code> 嵌套是指在一个 <code>match</code> 表达式中嵌套另一个 <code>match</code> 表达式。这种方式可以用于处理复杂的模式匹配逻辑，使得代码更加清晰和有层次感。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Outer</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">A</span>(Inner),</span><br><span class="line">    <span class="title function_ invoke__">B</span>(Inner),</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">Inner</span> &#123;</span><br><span class="line">    X,</span><br><span class="line">    Y,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">outer</span> = Outer::<span class="title function_ invoke__">A</span>(Inner::X);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> outer &#123;</span><br><span class="line">        Outer::<span class="title function_ invoke__">A</span>(inner) =&gt; &#123;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;Outer is A&quot;</span>);</span><br><span class="line">            <span class="keyword">match</span> inner &#123;</span><br><span class="line">                Inner::X =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Inner is X&quot;</span>),</span><br><span class="line">                Inner::Y =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Inner is Y&quot;</span>),</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        Outer::<span class="title function_ invoke__">B</span>(inner) =&gt; &#123;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;Outer is B&quot;</span>);</span><br><span class="line">            <span class="keyword">match</span> inner &#123;</span><br><span class="line">                Inner::X =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Inner is X&quot;</span>),</span><br><span class="line">                Inner::Y =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Inner is Y&quot;</span>),</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出结果"><a href="#输出结果" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Outer is A</span><br><span class="line">Inner is X</span><br></pre></td></tr></table></figure>
+
+<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><ul>
+<li>外层 <code>match</code> 匹配 <code>Outer</code> 枚举的变体。</li>
+<li>内层 <code>match</code> 匹配 <code>Inner</code> 枚举的变体。</li>
+<li>这种嵌套方式可以很好地处理嵌套结构的匹配逻辑。</li>
+</ul>
+<h2 id="九、if-let-语法"><a href="#九、if-let-语法" class="headerlink" title="九、if let 语法"></a>九、<code>if let</code> 语法</h2><p><code>if let</code> 是一种更简洁的模式匹配语法，用于处理只对一个模式感兴趣的情况。它类似于 <code>match</code>，但语法更简洁，且只处理一个分支。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">option</span> = <span class="title function_ invoke__">Some</span>(<span class="number">42</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 if let 匹配 Some(x) 模式</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> <span class="variable">Some</span>(x) = option &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;The value is: &#123;&#125;&quot;</span>, x);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;No value&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出结果-1"><a href="#输出结果-1" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The value is: 42</span><br></pre></td></tr></table></figure>
+
+<h3 id="说明-1"><a href="#说明-1" class="headerlink" title="说明"></a>说明</h3><ul>
+<li><code>if let</code> 语法格式为 <code>if let &lt;pattern&gt; = &lt;expression&gt; &#123; ... &#125;</code>。</li>
+<li>如果 <code>&lt;expression&gt;</code> 匹配 <code>&lt;pattern&gt;</code>，则执行代码块。</li>
+<li>否则，可以使用 <code>else</code> 分支处理其他情况。</li>
+</ul>
+<h2 id="十、if-let-与-match-的对比"><a href="#十、if-let-与-match-的对比" class="headerlink" title="十、if let 与 match 的对比"></a>十、<code>if let</code> 与 <code>match</code> 的对比</h2><h3 id="（二）代码示例与注释"><a href="#（二）代码示例与注释" class="headerlink" title="（二）代码示例与注释"></a>（二）代码示例与注释</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">option</span> = <span class="title function_ invoke__">Some</span>(<span class="number">42</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 match</span></span><br><span class="line">    <span class="keyword">match</span> option &#123;</span><br><span class="line">        <span class="title function_ invoke__">Some</span>(x) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;The value is: &#123;&#125;&quot;</span>, x),</span><br><span class="line">        <span class="literal">None</span> =&gt; <span class="built_in">println!</span>(<span class="string">&quot;No value&quot;</span>),</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 if let</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> <span class="variable">Some</span>(x) = option &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;The value is: &#123;&#125;&quot;</span>, x);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;No value&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出结果-2"><a href="#输出结果-2" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">The value is: 42</span><br><span class="line">The value is: 42</span><br></pre></td></tr></table></figure>
+
+<h3 id="说明-2"><a href="#说明-2" class="headerlink" title="说明"></a>说明</h3><ul>
+<li><code>match</code> 更通用，可以处理多个模式。</li>
+<li><code>if let</code> 更简洁，适用于只对一个模式感兴趣的情况。</li>
+</ul>
+<h2 id="十一、if-let-嵌套"><a href="#十一、if-let-嵌套" class="headerlink" title="十一、if let 嵌套"></a>十一、<code>if let</code> 嵌套</h2><p><code>if let</code> 也可以嵌套使用，用于处理更复杂的模式匹配逻辑。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">option</span> = <span class="title function_ invoke__">Some</span>(<span class="title function_ invoke__">Some</span>(<span class="number">42</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 if let 嵌套</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> <span class="variable">Some</span>(inner_option) = option &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> <span class="variable">Some</span>(x) = inner_option &#123;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;The value is: &#123;&#125;&quot;</span>, x);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;Inner option is None&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Outer option is None&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出结果-3"><a href="#输出结果-3" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The value is: 42</span><br></pre></td></tr></table></figure>
+
+<h3 id="说明-3"><a href="#说明-3" class="headerlink" title="说明"></a>说明</h3><ul>
+<li>外层 <code>if let</code> 匹配外层的 <code>Option</code>。</li>
+<li>内层 <code>if let</code> 匹配内层的 <code>Option</code>。</li>
+<li>这种嵌套方式可以使代码更加简洁，但要注意嵌套层次不宜过多，否则会降低代码的可读性。</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>QYFJ793</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2025/04/09/RUST%E4%B9%8B%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D/">http://example.com/2025/04/09/RUST%E4%B9%8B%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2025/04/09/RUST%E4%B9%8B%E5%B8%B8%E8%A7%81%E9%9B%86%E5%90%88/">'RUST之常见集合'</a>
+            
+            
+            <a class="next" rel="next" href="/2024/10/17/RUST%E4%B9%8B%E7%BB%93%E6%9E%84%E4%BD%93/">RUST之结构体</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© QYFJ793 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

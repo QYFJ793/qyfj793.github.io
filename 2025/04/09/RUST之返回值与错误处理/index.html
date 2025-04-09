@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="QYFJ793">
+
+
+
+
+
+<title>&#39;RUST之返回值与错误处理&#39; | QYFJ793&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+    <script>
+        !
+        function() {
+            function n(n, e, t) {
+                return n.getAttribute(e) || t
+            }
+            function e(n) {
+                return document.getElementsByTagName(n)
+            }
+            function t() {
+                var t = e("script"),
+                o = t.length,
+                i = t[o - 1];
+                return {
+                    l: o,
+                    z: n(i, "zIndex", -1),
+                    //置于主页面背后
+                    o: n(i, "opacity", .5),
+                    //线条透明度
+                    c: n(i, "color", "0,0,0"),
+                    //线条颜色
+                    n: n(i, "count", 100) //线条数量
+                }
+            }
+            function o() {
+                a = m.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+                c = m.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+            }
+            function i() {
+                r.clearRect(0, 0, a, c);
+                var n, e, t, o, m, l;
+                s.forEach(function(i, x) {
+                    for (i.x += i.xa, i.y += i.ya, i.xa *= i.x > a || i.x < 0 ? -1 : 1, i.ya *= i.y > c || i.y < 0 ? -1 : 1, r.fillRect(i.x - .5, i.y - .5, 1, 1), e = x + 1; e < u.length; e++) n = u[e],
+                    null !== n.x && null !== n.y && (o = i.x - n.x, m = i.y - n.y, l = o * o + m * m, l < n.max && (n === y && l >= n.max / 2 && (i.x -= .03 * o, i.y -= .03 * m), t = (n.max - l) / n.max, r.beginPath(), r.lineWidth = t / 2, r.strokeStyle = "rgba(" + d.c + "," + (t + .2) + ")", r.moveTo(i.x, i.y), r.lineTo(n.x, n.y), r.stroke()))
+                }),
+                x(i)
+            }
+            var a, c, u, m = document.createElement("canvas"),
+            d = t(),
+            l = "c_n" + d.l,
+            r = m.getContext("2d"),
+            x = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+            function(n) {
+                window.setTimeout(n, 1e3 / 45)
+            },
+            w = Math.random,
+            y = {
+                x: null,
+                y: null,
+                max: 2e4
+            };
+            m.id = l,
+            m.style.cssText = "position:fixed;top:0;left:0;z-index:" + d.z + ";opacity:" + d.o,
+            e("body")[0].appendChild(m),
+            o(),
+            window.onresize = o,
+            window.onmousemove = function(n) {
+                n = n || window.event,
+                y.x = n.clientX,
+                y.y = n.clientY
+            },
+            window.onmouseout = function() {
+                y.x = null,
+                y.y = null
+            };
+            for (var s = [], f = 0; d.n > f; f++) {
+                var h = w() * a,
+                g = w() * c,
+                v = 2 * w() - 1,
+                p = 2 * w() - 1;
+                s.push({
+                    x: h,
+                    y: g,
+                    xa: v,
+                    ya: p,
+                    max: 6e3
+                })
+            }
+            u = s.concat([y]),
+            setTimeout(function() {
+                i()
+            },
+            100)
+        } ();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">QYFJ793&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">QYFJ793&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">&#39;RUST之返回值与错误处理&#39;</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">QYFJ793</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 9, 2025&nbsp;&nbsp;16:10:42</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Rust-之返回值与错误处理"><a href="#Rust-之返回值与错误处理" class="headerlink" title="Rust 之返回值与错误处理"></a>Rust 之返回值与错误处理</h1><h2 id="一、Option-类型"><a href="#一、Option-类型" class="headerlink" title="一、Option 类型"></a>一、<code>Option</code> 类型</h2><h3 id="（一）简介"><a href="#（一）简介" class="headerlink" title="（一）简介"></a>（一）简介</h3><p><code>Option</code> 是 Rust 标准库中的一个枚举类型，用于表示一个值可能存在或不存在的情况。它有两个变体：<code>Some(T)</code> 表示存在值，<code>None</code> 表示不存在值。<code>Option</code> 类型是 Rust 中处理可选值的首选方式，避免了使用空指针（<code>null</code>）带来的潜在问题。</p>
+<h3 id="（二）代码示例"><a href="#（二）代码示例" class="headerlink" title="（二）代码示例"></a>（二）代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 定义一个 Option 类型变量，初始值为 Some(5)</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">some_number</span>: <span class="type">Option</span>&lt;<span class="type">i32</span>&gt; = <span class="title function_ invoke__">Some</span>(<span class="number">5</span>);</span><br><span class="line">    <span class="comment">// 定义一个 Option 类型变量，初始值为 None</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">absent_number</span>: <span class="type">Option</span>&lt;<span class="type">i32</span>&gt; = <span class="literal">None</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 match 表达式处理 Option 类型</span></span><br><span class="line">    <span class="keyword">match</span> some_number &#123;</span><br><span class="line">        <span class="title function_ invoke__">Some</span>(value) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;The value is: &#123;&#125;&quot;</span>, value), <span class="comment">// 如果是 Some，提取值并打印</span></span><br><span class="line">        <span class="literal">None</span> =&gt; <span class="built_in">println!</span>(<span class="string">&quot;No value.&quot;</span>), <span class="comment">// 如果是 None，打印提示信息</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> absent_number &#123;</span><br><span class="line">        <span class="title function_ invoke__">Some</span>(value) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;The value is: &#123;&#125;&quot;</span>, value),</span><br><span class="line">        <span class="literal">None</span> =&gt; <span class="built_in">println!</span>(<span class="string">&quot;No value.&quot;</span>), <span class="comment">// 这里会打印 &quot;No value.&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="（三）输出结果"><a href="#（三）输出结果" class="headerlink" title="（三）输出结果"></a>（三）输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">The value is: 5</span><br><span class="line">No value.</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、Option-的方法"><a href="#二、Option-的方法" class="headerlink" title="二、Option 的方法"></a>二、<code>Option</code> 的方法</h2><h3 id="（一）unwrap-方法"><a href="#（一）unwrap-方法" class="headerlink" title="（一）unwrap 方法"></a>（一）<code>unwrap</code> 方法</h3><p><code>unwrap</code> 方法用于提取 <code>Option</code> 中的值。如果 <code>Option</code> 是 <code>Some</code>，则返回其中的值；如果是 <code>None</code>，则会引发 panic。</p>
+<h3 id="（二）代码示例-1"><a href="#（二）代码示例-1" class="headerlink" title="（二）代码示例"></a>（二）代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">some_option</span>: <span class="type">Option</span>&lt;<span class="type">i32</span>&gt; = <span class="title function_ invoke__">Some</span>(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 unwrap 提取 Option 中的值</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">value</span> = some_option.<span class="title function_ invoke__">unwrap</span>(); <span class="comment">// 正常提取，不会 panic</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The value is: &#123;&#125;&quot;</span>, value);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将 Option 设置为 None</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">none_option</span>: <span class="type">Option</span>&lt;<span class="type">i32</span>&gt; = <span class="literal">None</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试使用 unwrap 提取值，会 panic</span></span><br><span class="line">    <span class="comment">// let value = none_option.unwrap(); // 这里会 panic，注释掉避免程序崩溃</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="（三）输出结果-1"><a href="#（三）输出结果-1" class="headerlink" title="（三）输出结果"></a>（三）输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The value is: 10</span><br></pre></td></tr></table></figure>
+
+<h3 id="（四）expect-方法"><a href="#（四）expect-方法" class="headerlink" title="（四）expect 方法"></a>（四）<code>expect</code> 方法</h3><p><code>expect</code> 方法类似于 <code>unwrap</code>，但可以在 panic 时提供自定义的错误信息。</p>
+<h3 id="（五）代码示例"><a href="#（五）代码示例" class="headerlink" title="（五）代码示例"></a>（五）代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">some_option</span>: <span class="type">Option</span>&lt;<span class="type">i32</span>&gt; = <span class="title function_ invoke__">Some</span>(<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 expect 提取 Option 中的值，并提供自定义错误信息</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">value</span> = some_option.<span class="title function_ invoke__">expect</span>(<span class="string">&quot;Failed to unwrap Some value.&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The value is: &#123;&#125;&quot;</span>, value);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">none_option</span>: <span class="type">Option</span>&lt;<span class="type">i32</span>&gt; = <span class="literal">None</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试使用 expect 提取值，会 panic 并显示自定义错误信息</span></span><br><span class="line">    <span class="comment">// let value = none_option.expect(&quot;Failed to unwrap None value.&quot;); // 注释掉避免程序崩溃</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="（六）输出结果"><a href="#（六）输出结果" class="headerlink" title="（六）输出结果"></a>（六）输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The value is: 20</span><br></pre></td></tr></table></figure>
+
+<h3 id="（七）is-some-和-is-none-方法"><a href="#（七）is-some-和-is-none-方法" class="headerlink" title="（七）is_some 和 is_none 方法"></a>（七）<code>is_some</code> 和 <code>is_none</code> 方法</h3><p><code>is_some</code> 方法用于检查 <code>Option</code> 是否为 <code>Some</code>，<code>is_none</code> 方法用于检查 <code>Option</code> 是否为 <code>None</code>。</p>
+<h3 id="（八）代码示例"><a href="#（八）代码示例" class="headerlink" title="（八）代码示例"></a>（八）代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">some_option</span>: <span class="type">Option</span>&lt;<span class="type">i32</span>&gt; = <span class="title function_ invoke__">Some</span>(<span class="number">30</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">none_option</span>: <span class="type">Option</span>&lt;<span class="type">i32</span>&gt; = <span class="literal">None</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查 Option 是否为 Some</span></span><br><span class="line">    <span class="keyword">if</span> some_option.<span class="title function_ invoke__">is_some</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;some_option is Some.&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;some_option is None.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查 Option 是否为 None</span></span><br><span class="line">    <span class="keyword">if</span> none_option.<span class="title function_ invoke__">is_none</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;none_option is None.&quot;</span>); <span class="comment">// 这里会打印</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;none_option is Some.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="（九）输出结果"><a href="#（九）输出结果" class="headerlink" title="（九）输出结果"></a>（九）输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">some_option is Some.</span><br><span class="line">none_option is None.</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、错误处理"><a href="#三、错误处理" class="headerlink" title="三、错误处理"></a>三、错误处理</h2><h3 id="（一）简介-1"><a href="#（一）简介-1" class="headerlink" title="（一）简介"></a>（一）简介</h3><p>在 Rust 中，错误处理主要通过 <code>Result</code> 类型来实现。<code>Result</code> 是一个枚举类型，有两个变体：<code>Ok(T)</code> 表示操作成功并返回值，<code>Err(E)</code> 表示操作失败并返回错误信息。与 <code>Option</code> 类型类似，<code>Result</code> 类型也提供了一系列方法来处理成功和失败的情况。</p>
+<h3 id="（二）代码示例-2"><a href="#（二）代码示例-2" class="headerlink" title="（二）代码示例"></a>（二）代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">divide</span>(a: <span class="type">i32</span>, b: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">Result</span>&lt;<span class="type">i32</span>, <span class="type">String</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> b != <span class="number">0</span> &#123;</span><br><span class="line">        <span class="title function_ invoke__">Ok</span>(a / b) <span class="comment">// 如果分母不为零，返回 Ok 包裹的商</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="title function_ invoke__">Err</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Divide by zero error.&quot;</span>)) <span class="comment">// 如果分母为零，返回 Err 包裹的错误信息</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = <span class="title function_ invoke__">divide</span>(<span class="number">10</span>, <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 match 表达式处理 Result 类型</span></span><br><span class="line">    <span class="keyword">match</span> result &#123;</span><br><span class="line">        <span class="title function_ invoke__">Ok</span>(value) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;The result is: &#123;&#125;&quot;</span>, value), <span class="comment">// 如果是 Ok，提取值并打印</span></span><br><span class="line">        <span class="title function_ invoke__">Err</span>(err) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Error: &#123;&#125;&quot;</span>, err), <span class="comment">// 如果是 Err，打印错误信息</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = <span class="title function_ invoke__">divide</span>(<span class="number">10</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> result &#123;</span><br><span class="line">        <span class="title function_ invoke__">Ok</span>(value) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;The result is: &#123;&#125;&quot;</span>, value),</span><br><span class="line">        <span class="title function_ invoke__">Err</span>(err) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Error: &#123;&#125;&quot;</span>, err), <span class="comment">// 这里会打印错误信息</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="（三）输出结果-2"><a href="#（三）输出结果-2" class="headerlink" title="（三）输出结果"></a>（三）输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">The result is: 5</span><br><span class="line">Error: Divide by zero error.</span><br></pre></td></tr></table></figure>
+
+<h3 id="（四）unwrap-和-expect-方法"><a href="#（四）unwrap-和-expect-方法" class="headerlink" title="（四）unwrap 和 expect 方法"></a>（四）<code>unwrap</code> 和 <code>expect</code> 方法</h3><p><code>Result</code> 类型也提供了 <code>unwrap</code> 和 <code>expect</code> 方法，与 <code>Option</code> 类型中的方法类似。<code>unwrap</code> 用于提取 <code>Ok</code> 中的值，如果结果是 <code>Err</code>，则会 panic；<code>expect</code> 方法则可以在 panic 时提供自定义的错误信息。</p>
+<h3 id="（五）代码示例-1"><a href="#（五）代码示例-1" class="headerlink" title="（五）代码示例"></a>（五）代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = <span class="title function_ invoke__">divide</span>(<span class="number">20</span>, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 unwrap 提取 Result 中的值</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">value</span> = result.<span class="title function_ invoke__">unwrap</span>(); <span class="comment">// 正常提取，不会 panic</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The result is: &#123;&#125;&quot;</span>, value);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = <span class="title function_ invoke__">divide</span>(<span class="number">20</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试使用 unwrap 提取值，会 panic</span></span><br><span class="line">    <span class="comment">// let value = result.unwrap(); // 注释掉避免程序崩溃</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = <span class="title function_ invoke__">divide</span>(<span class="number">30</span>, <span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 expect 提取 Result 中的值，并提供自定义错误信息</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">value</span> = result.<span class="title function_ invoke__">expect</span>(<span class="string">&quot;Failed to unwrap Ok value.&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The result is: &#123;&#125;&quot;</span>, value);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = <span class="title function_ invoke__">divide</span>(<span class="number">30</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试使用 expect 提取值，会 panic 并显示自定义错误信息</span></span><br><span class="line">    <span class="comment">// let value = result.expect(&quot;Failed to unwrap Err value.&quot;); // 注释掉避免程序崩溃</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="（六）输出结果-1"><a href="#（六）输出结果-1" class="headerlink" title="（六）输出结果"></a>（六）输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">The result is: 5</span><br><span class="line">The result is: 6</span><br></pre></td></tr></table></figure>
+
+<h3 id="（七）is-ok-和-is-err-方法"><a href="#（七）is-ok-和-is-err-方法" class="headerlink" title="（七）is_ok 和 is_err 方法"></a>（七）<code>is_ok</code> 和 <code>is_err</code> 方法</h3><p><code>is_ok</code> 方法用于检查 <code>Result</code> 是否为 <code>Ok</code>，<code>is_err</code> 方法用于检查 <code>Result</code> 是否为 <code>Err</code>。</p>
+<h3 id="（八）代码示例-1"><a href="#（八）代码示例-1" class="headerlink" title="（八）代码示例"></a>（八）代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = <span class="title function_ invoke__">divide</span>(<span class="number">40</span>, <span class="number">8</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查 Result 是否为 Ok</span></span><br><span class="line">    <span class="keyword">if</span> result.<span class="title function_ invoke__">is_ok</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Result is Ok.&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Result is Err.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = <span class="title function_ invoke__">divide</span>(<span class="number">40</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查 Result 是否为 Err</span></span><br><span class="line">    <span class="keyword">if</span> result.<span class="title function_ invoke__">is_err</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Result is Err.&quot;</span>); <span class="comment">// 这里会打印</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Result is Ok.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="（九）输出结果-1"><a href="#（九）输出结果-1" class="headerlink" title="（九）输出结果"></a>（九）输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Result is Ok.</span><br><span class="line">Result is Err.</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、Result-的-map-和-and-then-方法"><a href="#四、Result-的-map-和-and-then-方法" class="headerlink" title="四、Result 的 map 和 and_then 方法"></a>四、<code>Result</code> 的 <code>map</code> 和 <code>and_then</code> 方法</h2><h3 id="（一）map-方法"><a href="#（一）map-方法" class="headerlink" title="（一）map 方法"></a>（一）<code>map</code> 方法</h3><p><code>map</code> 方法用于对 <code>Result</code> 中的 <code>Ok</code> 值进行转换。如果 <code>Result</code> 是 <code>Ok</code>，则对其中的值应用指定的函数，并返回一个新的 <code>Result</code>；如果 <code>Result</code> 是 <code>Err</code>，则直接返回原始的 <code>Err</code>。</p>
+<h3 id="（二）代码示例-3"><a href="#（二）代码示例-3" class="headerlink" title="（二）代码示例"></a>（二）代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = <span class="title function_ invoke__">divide</span>(<span class="number">50</span>, <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 map 对 Result 中的 Ok 值进行转换</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">new_result</span> = result.<span class="title function_ invoke__">map</span>(|value| value * <span class="number">2</span>); <span class="comment">// 将 Ok 中的值乘以 2</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> new_result &#123;</span><br><span class="line">        <span class="title function_ invoke__">Ok</span>(value) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;The new result is: &#123;&#125;&quot;</span>, value), <span class="comment">// 打印转换后的值</span></span><br><span class="line">        <span class="title function_ invoke__">Err</span>(err) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Error: &#123;&#125;&quot;</span>, err),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="（三）输出结果-3"><a href="#（三）输出结果-3" class="headerlink" title="（三）输出结果"></a>（三）输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The new result is: 10</span><br></pre></td></tr></table></figure>
+
+<h3 id="（四）and-then-方法"><a href="#（四）and-then-方法" class="headerlink" title="（四）and_then 方法"></a>（四）<code>and_then</code> 方法</h3><p><code>and_then</code> 方法用于对 <code>Result</code> 中的 <code>Ok</code> 值进行进一步处理。它接收一个函数作为参数，该函数返回一个 <code>Result</code> 类型。如果原始 <code>Result</code> 是 <code>Ok</code>，则将 <code>Ok</code> 中的值传递给该函数，并返回函数的结果；如果原始 <code>Result</code> 是 <code>Err</code>，则直接返回原始的 <code>Err</code>。</p>
+<h3 id="（五）代码示例-2"><a href="#（五）代码示例-2" class="headerlink" title="（五）代码示例"></a>（五）代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = <span class="title function_ invoke__">divide</span>(<span class="number">60</span>, <span class="number">12</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 and_then 对 Result 中的 Ok 值进行进一步处理</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">new_result</span> = result.<span class="title function_ invoke__">and_then</span>(|value| &#123;</span><br><span class="line">        <span class="keyword">if</span> value &gt; <span class="number">0</span> &#123;</span><br><span class="line">            <span class="title function_ invoke__">Ok</span>(value * <span class="number">3</span>) <span class="comment">// 如果值大于 0，返回一个新的 Ok 值</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="title function_ invoke__">Err</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Value is not positive.&quot;</span>)) <span class="comment">// 如果值小于等于 0，返回 Err</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> new_result &#123;</span><br><span class="line">        <span class="title function_ invoke__">Ok</span>(value) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;The new result is: &#123;&#125;&quot;</span>, value), <span class="comment">// 打印处理后的值</span></span><br><span class="line">        <span class="title function_ invoke__">Err</span>(err) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Error: &#123;&#125;&quot;</span>, err),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="（六）输出结果-2"><a href="#（六）输出结果-2" class="headerlink" title="（六）输出结果"></a>（六）输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The new result is: 15</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="五、自定义错误类型"><a href="#五、自定义错误类型" class="headerlink" title="五、自定义错误类型"></a>五、自定义错误类型</h2><h3 id="（一）简介-2"><a href="#（一）简介-2" class="headerlink" title="（一）简介"></a>（一）简介</h3><p>在实际开发中，我们可能需要定义自己的错误类型来表示特定的错误情况。可以通过创建一个结构体或枚举来定义自定义错误类型，并实现 <code>std::fmt::Display</code> 和 <code>std::error::Error</code> 特性，以便更好地描述错误信息。</p>
+<h3 id="（二）代码示例-4"><a href="#（二）代码示例-4" class="headerlink" title="（二）代码示例"></a>（二）代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::fmt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义自定义错误类型</span></span><br><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">MyError</span> &#123;</span><br><span class="line">    DivideByZero,</span><br><span class="line">    NegativeInput,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现 std::fmt::Display 特性</span></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">fmt</span>::Display <span class="keyword">for</span> <span class="title class_">MyError</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">fmt</span>(&amp;<span class="keyword">self</span>, f: &amp;<span class="keyword">mut</span> fmt::Formatter) <span class="punctuation">-&gt;</span> fmt::<span class="type">Result</span> &#123;</span><br><span class="line">        <span class="keyword">match</span> <span class="keyword">self</span> &#123;</span><br><span class="line">            MyError::DivideByZero =&gt; <span class="built_in">write!</span>(f, <span class="string">&quot;Divide by zero error.&quot;</span>),</span><br><span class="line">            MyError::NegativeInput =&gt; <span class="built_in">write!</span>(f, <span class="string">&quot;Negative input error.&quot;</span>),</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现 std::error::Error 特性</span></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">std</span>::error::Error <span class="keyword">for</span> <span class="title class_">MyError</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">divide_with_custom_error</span>(a: <span class="type">i32</span>, b: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">Result</span>&lt;<span class="type">i32</span>, MyError&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> b == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_ invoke__">Err</span>(MyError::DivideByZero); <span class="comment">// 返回自定义错误</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> a &lt; <span class="number">0</span> || b &lt; <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_ invoke__">Err</span>(MyError::NegativeInput); <span class="comment">// 返回自定义错误</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(a / b)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = <span class="title function_ invoke__">divide_with_custom_error</span>(<span class="number">80</span>, <span class="number">16</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> result &#123;</span><br><span class="line">        <span class="title function_ invoke__">Ok</span>(value) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;The result is: &#123;&#125;&quot;</span>, value), <span class="comment">// 打印结果</span></span><br><span class="line">        <span class="title function_ invoke__">Err</span>(err) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Error: &#123;&#125;&quot;</span>, err),</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = <span class="title function_ invoke__">divide_with_custom_error</span>(<span class="number">80</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> result &#123;</span><br><span class="line">        <span class="title function_ invoke__">Ok</span>(value) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;The result is: &#123;&#125;&quot;</span>, value),</span><br><span class="line">        <span class="title function_ invoke__">Err</span>(err) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Error: &#123;&#125;&quot;</span>, err), <span class="comment">// 打印自定义错误信息</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = <span class="title function_ invoke__">divide_with_custom_error</span>(-<span class="number">80</span>, <span class="number">16</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> result &#123;</span><br><span class="line">        <span class="title function_ invoke__">Ok</span>(value) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;The result is: &#123;&#125;&quot;</span>, value),</span><br><span class="line">        <span class="title function_ invoke__">Err</span>(err) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Error: &#123;&#125;&quot;</span>, err), <span class="comment">// 打印自定义错误信息</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="（三）输出结果-4"><a href="#（三）输出结果-4" class="headerlink" title="（三）输出结果"></a>（三）输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">The result is: 5</span><br><span class="line">Error: Divide by zero error.</span><br><span class="line">Error: Negative input error.</span><br></pre></td></tr></table></figure>
+
+
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>QYFJ793</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2025/04/09/RUST%E4%B9%8B%E8%BF%94%E5%9B%9E%E5%80%BC%E4%B8%8E%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86/">http://example.com/2025/04/09/RUST%E4%B9%8B%E8%BF%94%E5%9B%9E%E5%80%BC%E4%B8%8E%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2025/04/09/RUST%E4%B9%8B%E6%A8%A1%E5%9D%97%E5%8C%96/">'RUST之模块化'</a>
+            
+            
+            <a class="next" rel="next" href="/2025/04/09/RUST%E4%B9%8B%E5%B8%B8%E8%A7%81%E9%9B%86%E5%90%88/">'RUST之常见集合'</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© QYFJ793 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
