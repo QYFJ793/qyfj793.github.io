@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="QYFJ793">
+
+
+
+
+
+<title>&#39;RUST之Trait特性&#39; | QYFJ793&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+    <script>
+        !
+        function() {
+            function n(n, e, t) {
+                return n.getAttribute(e) || t
+            }
+            function e(n) {
+                return document.getElementsByTagName(n)
+            }
+            function t() {
+                var t = e("script"),
+                o = t.length,
+                i = t[o - 1];
+                return {
+                    l: o,
+                    z: n(i, "zIndex", -1),
+                    //置于主页面背后
+                    o: n(i, "opacity", .5),
+                    //线条透明度
+                    c: n(i, "color", "0,0,0"),
+                    //线条颜色
+                    n: n(i, "count", 100) //线条数量
+                }
+            }
+            function o() {
+                a = m.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+                c = m.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+            }
+            function i() {
+                r.clearRect(0, 0, a, c);
+                var n, e, t, o, m, l;
+                s.forEach(function(i, x) {
+                    for (i.x += i.xa, i.y += i.ya, i.xa *= i.x > a || i.x < 0 ? -1 : 1, i.ya *= i.y > c || i.y < 0 ? -1 : 1, r.fillRect(i.x - .5, i.y - .5, 1, 1), e = x + 1; e < u.length; e++) n = u[e],
+                    null !== n.x && null !== n.y && (o = i.x - n.x, m = i.y - n.y, l = o * o + m * m, l < n.max && (n === y && l >= n.max / 2 && (i.x -= .03 * o, i.y -= .03 * m), t = (n.max - l) / n.max, r.beginPath(), r.lineWidth = t / 2, r.strokeStyle = "rgba(" + d.c + "," + (t + .2) + ")", r.moveTo(i.x, i.y), r.lineTo(n.x, n.y), r.stroke()))
+                }),
+                x(i)
+            }
+            var a, c, u, m = document.createElement("canvas"),
+            d = t(),
+            l = "c_n" + d.l,
+            r = m.getContext("2d"),
+            x = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+            function(n) {
+                window.setTimeout(n, 1e3 / 45)
+            },
+            w = Math.random,
+            y = {
+                x: null,
+                y: null,
+                max: 2e4
+            };
+            m.id = l,
+            m.style.cssText = "position:fixed;top:0;left:0;z-index:" + d.z + ";opacity:" + d.o,
+            e("body")[0].appendChild(m),
+            o(),
+            window.onresize = o,
+            window.onmousemove = function(n) {
+                n = n || window.event,
+                y.x = n.clientX,
+                y.y = n.clientY
+            },
+            window.onmouseout = function() {
+                y.x = null,
+                y.y = null
+            };
+            for (var s = [], f = 0; d.n > f; f++) {
+                var h = w() * a,
+                g = w() * c,
+                v = 2 * w() - 1,
+                p = 2 * w() - 1;
+                s.push({
+                    x: h,
+                    y: g,
+                    xa: v,
+                    ya: p,
+                    max: 6e3
+                })
+            }
+            u = s.concat([y]),
+            setTimeout(function() {
+                i()
+            },
+            100)
+        } ();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">QYFJ793&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">QYFJ793&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">&#39;RUST之Trait特性&#39;</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">QYFJ793</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 11, 2025&nbsp;&nbsp;0:21:28</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Rust-编程语言：Trait-特性学习文档"><a href="#Rust-编程语言：Trait-特性学习文档" class="headerlink" title="Rust 编程语言：Trait 特性学习文档"></a>Rust 编程语言：Trait 特性学习文档</h1><h2 id="一、Trait-的定义与作用"><a href="#一、Trait-的定义与作用" class="headerlink" title="一、Trait 的定义与作用"></a>一、Trait 的定义与作用</h2><h3 id="（一）定义"><a href="#（一）定义" class="headerlink" title="（一）定义"></a>（一）定义</h3><p>Trait 是 Rust 中一种定义共享行为的方式。它类似于其他语言中的接口（Interface），可以定义一组方法的签名，但不提供具体的实现。通过 Trait，可以为不同的类型提供通用的行为规范。</p>
+<h3 id="（二）代码示例"><a href="#（二）代码示例" class="headerlink" title="（二）代码示例"></a>（二）代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个名为 Animal 的 Trait，它有一个方法叫 make_sound</span></span><br><span class="line"><span class="keyword">trait</span> <span class="title class_">Animal</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">make_sound</span>(&amp;<span class="keyword">self</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现 Animal Trait 为 Dog 类型</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Dog</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Animal</span> <span class="keyword">for</span> <span class="title class_">Dog</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">make_sound</span>(&amp;<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;汪汪汪&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现 Animal Trait 为 Cat 类型</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Cat</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Animal</span> <span class="keyword">for</span> <span class="title class_">Cat</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">make_sound</span>(&amp;<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;喵喵喵&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">dog</span> = Dog;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">cat</span> = Cat;</span><br><span class="line"></span><br><span class="line">    dog.<span class="title function_ invoke__">make_sound</span>(); <span class="comment">// 输出：汪汪汪</span></span><br><span class="line">    cat.<span class="title function_ invoke__">make_sound</span>(); <span class="comment">// 输出：喵喵喵</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="（三）输出结果"><a href="#（三）输出结果" class="headerlink" title="（三）输出结果"></a>（三）输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">汪汪汪</span><br><span class="line">喵喵喵</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、默认方法"><a href="#二、默认方法" class="headerlink" title="二、默认方法"></a>二、默认方法</h2><h3 id="（一）定义-1"><a href="#（一）定义-1" class="headerlink" title="（一）定义"></a>（一）定义</h3><p>Trait 可以为其方法提供默认实现。如果某个类型实现了该 Trait，但没有实现某个方法，那么就会使用默认实现。</p>
+<h3 id="（二）代码示例-1"><a href="#（二）代码示例-1" class="headerlink" title="（二）代码示例"></a>（二）代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个名为 Shape 的 Trait，它有一个方法叫 area，默认实现返回 0.0</span></span><br><span class="line"><span class="keyword">trait</span> <span class="title class_">Shape</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">area</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> <span class="type">f64</span> &#123;</span><br><span class="line">        <span class="number">0.0</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现 Shape Trait 为 Circle 类型，并提供 area 方法的具体实现</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Circle</span> &#123;</span><br><span class="line">    radius: <span class="type">f64</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Shape</span> <span class="keyword">for</span> <span class="title class_">Circle</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">area</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> <span class="type">f64</span> &#123;</span><br><span class="line">        std::<span class="type">f64</span>::consts::PI * <span class="keyword">self</span>.radius * <span class="keyword">self</span>.radius</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现 Shape Trait 为 Square 类型，不提供 area 方法的具体实现，使用默认实现</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Square</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Shape</span> <span class="keyword">for</span> <span class="title class_">Square</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">circle</span> = Circle &#123; radius: <span class="number">5.0</span> &#125;;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">square</span> = Square;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Circle area: &#123;&#125;&quot;</span>, circle.<span class="title function_ invoke__">area</span>()); <span class="comment">// 输出：Circle area: 78.53981633974483</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Square area: &#123;&#125;&quot;</span>, square.<span class="title function_ invoke__">area</span>()); <span class="comment">// 输出：Square area: 0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="（三）输出结果-1"><a href="#（三）输出结果-1" class="headerlink" title="（三）输出结果"></a>（三）输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Circle area: 78.53981633974483</span><br><span class="line">Square area: 0</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、Trait-对象"><a href="#三、Trait-对象" class="headerlink" title="三、Trait 对象"></a>三、Trait 对象</h2><h3 id="（一）定义-2"><a href="#（一）定义-2" class="headerlink" title="（一）定义"></a>（一）定义</h3><p>Trait 对象允许我们将实现了某个 Trait 的不同类型的值存储在一个变量中，从而实现动态多态。它使用 <code>Box&lt;dyn Trait&gt;</code> 或 <code>&amp;dyn Trait</code> 等形式。</p>
+<h3 id="（二）代码示例-2"><a href="#（二）代码示例-2" class="headerlink" title="（二）代码示例"></a>（二）代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个名为 Performer 的 Trait，它有一个方法叫 perform</span></span><br><span class="line"><span class="keyword">trait</span> <span class="title class_">Performer</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">perform</span>(&amp;<span class="keyword">self</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现 Performer Trait 为 Singer 类型</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Singer</span> &#123;</span><br><span class="line">    name: <span class="type">String</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Performer</span> <span class="keyword">for</span> <span class="title class_">Singer</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">perform</span>(&amp;<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125; 在唱歌&quot;</span>, <span class="keyword">self</span>.name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现 Performer Trait 为 Dancer 类型</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Dancer</span> &#123;</span><br><span class="line">    name: <span class="type">String</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Performer</span> <span class="keyword">for</span> <span class="title class_">Dancer</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">perform</span>(&amp;<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125; 在跳舞&quot;</span>, <span class="keyword">self</span>.name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">singer</span> = Singer &#123;</span><br><span class="line">        name: <span class="string">&quot;张学友&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">dancer</span> = Dancer &#123;</span><br><span class="line">        name: <span class="string">&quot;杨丽萍&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 Trait 对象存储不同类型的 Performer</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">performers</span>: <span class="type">Vec</span>&lt;<span class="type">Box</span>&lt;<span class="keyword">dyn</span> Performer&gt;&gt; = <span class="built_in">vec!</span>[<span class="type">Box</span>::<span class="title function_ invoke__">new</span>(singer), <span class="type">Box</span>::<span class="title function_ invoke__">new</span>(dancer)];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">performer</span> <span class="keyword">in</span> performers &#123;</span><br><span class="line">        performer.<span class="title function_ invoke__">perform</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="（三）输出结果-2"><a href="#（三）输出结果-2" class="headerlink" title="（三）输出结果"></a>（三）输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">张学友 在唱歌</span><br><span class="line">杨丽萍 在跳舞</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、Trait-约束"><a href="#四、Trait-约束" class="headerlink" title="四、Trait 约束"></a>四、Trait 约束</h2><h3 id="（一）定义-3"><a href="#（一）定义-3" class="headerlink" title="（一）定义"></a>（一）定义</h3><p>Trait 约束用于在泛型函数或结构体中指定类型必须实现某个 Trait。这使得泛型代码能够调用 Trait 中定义的方法。</p>
+<h3 id="（二）代码示例-3"><a href="#（二）代码示例-3" class="headerlink" title="（二）代码示例"></a>（二）代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个名为 Displayable 的 Trait，它有一个方法叫 display</span></span><br><span class="line"><span class="keyword">trait</span> <span class="title class_">Displayable</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">display</span>(&amp;<span class="keyword">self</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现 Displayable Trait 为 Book 类型</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Book</span> &#123;</span><br><span class="line">    title: <span class="type">String</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Displayable</span> <span class="keyword">for</span> <span class="title class_">Book</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">display</span>(&amp;<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;书名: &#123;&#125;&quot;</span>, <span class="keyword">self</span>.title);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义一个泛型函数，使用 Displayable Trait 约束</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">show</span>&lt;T: Displayable&gt;(item: T) &#123;</span><br><span class="line">    item.<span class="title function_ invoke__">display</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">book</span> = Book &#123;</span><br><span class="line">        title: <span class="string">&quot;《Rust 编程之道》&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="title function_ invoke__">show</span>(book); <span class="comment">// 输出：书名: 《Rust 编程之道》</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="（三）输出结果-3"><a href="#（三）输出结果-3" class="headerlink" title="（三）输出结果"></a>（三）输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">书名: 《Rust 编程之道》</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、Trait-的继承"><a href="#五、Trait-的继承" class="headerlink" title="五、Trait 的继承"></a>五、Trait 的继承</h2><h3 id="（一）定义-4"><a href="#（一）定义-4" class="headerlink" title="（一）定义"></a>（一）定义</h3><p>Rust 中的 Trait 可以继承其他 Trait，这意味着一个 Trait 可以继承另一个 Trait 的所有方法。</p>
+<h3 id="（二）代码示例-4"><a href="#（二）代码示例-4" class="headerlink" title="（二）代码示例"></a>（二）代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个名为 Base 的 Trait，它有一个方法叫 base_method</span></span><br><span class="line"><span class="keyword">trait</span> <span class="title class_">Base</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">base_method</span>(&amp;<span class="keyword">self</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义一个名为 Derived 的 Trait，它继承了 Base Trait，并添加了一个方法叫 derived_method</span></span><br><span class="line"><span class="keyword">trait</span> <span class="title class_">Derived</span>: Base &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">derived_method</span>(&amp;<span class="keyword">self</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现 Base Trait 为 MyStruct 类型</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">MyStruct</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Base</span> <span class="keyword">for</span> <span class="title class_">MyStruct</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">base_method</span>(&amp;<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;这是基础方法&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现 Derived Trait 为 MyStruct 类型</span></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Derived</span> <span class="keyword">for</span> <span class="title class_">MyStruct</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">derived_method</span>(&amp;<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;这是派生方法&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">my_struct</span> = MyStruct;</span><br><span class="line"></span><br><span class="line">    my_struct.<span class="title function_ invoke__">base_method</span>(); <span class="comment">// 输出：这是基础方法</span></span><br><span class="line">    my_struct.<span class="title function_ invoke__">derived_method</span>(); <span class="comment">// 输出：这是派生方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="（三）输出结果-4"><a href="#（三）输出结果-4" class="headerlink" title="（三）输出结果"></a>（三）输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这是基础方法</span><br><span class="line">这是派生方法</span><br></pre></td></tr></table></figure>
+
+<h2 id="六、Trait-的关联类型"><a href="#六、Trait-的关联类型" class="headerlink" title="六、Trait 的关联类型"></a>六、Trait 的关联类型</h2><h3 id="（一）定义-5"><a href="#（一）定义-5" class="headerlink" title="（一）定义"></a>（一）定义</h3><p>关联类型允许在 Trait 中定义一个或多个类型，这些类型的具体实现可以在实现该 Trait 时确定。它类似于泛型，但更灵活。</p>
+<h3 id="（二）代码示例-5"><a href="#（二）代码示例-5" class="headerlink" title="（二）代码示例"></a>（二）代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个名为 Container 的 Trait，它有一个关联类型 Item 和一个方法 get_item</span></span><br><span class="line"><span class="keyword">trait</span> <span class="title class_">Container</span> &#123;</span><br><span class="line">    <span class="keyword">type</span> <span class="title class_">Item</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">get_item</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> <span class="keyword">Self</span>::Item;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现 Container Trait 为 MyContainer 类型，指定 Item 为 i32</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">MyContainer</span> &#123;</span><br><span class="line">    item: <span class="type">i32</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Container</span> <span class="keyword">for</span> <span class="title class_">MyContainer</span> &#123;</span><br><span class="line">    <span class="keyword">type</span> <span class="title class_">Item</span> = <span class="type">i32</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">get_item</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> <span class="keyword">Self</span>::Item &#123;</span><br><span class="line">        <span class="keyword">self</span>.item</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">container</span> = MyContainer &#123; item: <span class="number">42</span> &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;容器中的项: &#123;&#125;&quot;</span>, container.<span class="title function_ invoke__">get_item</span>()); <span class="comment">// 输出：容器中的项: 42</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="（三）输出结果-5"><a href="#（三）输出结果-5" class="headerlink" title="（三）输出结果"></a>（三）输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">容器中的项: 42</span><br></pre></td></tr></table></figure>
+
+<h2 id="七、Trait-的泛型方法"><a href="#七、Trait-的泛型方法" class="headerlink" title="七、Trait 的泛型方法"></a>七、Trait 的泛型方法</h2><h3 id="（一）定义-6"><a href="#（一）定义-6" class="headerlink" title="（一）定义"></a>（一）定义</h3><p>Trait 中的方法可以是泛型的，这意味着方法可以在实现时指定具体的类型参数。</p>
+<h3 id="（二）代码示例-6"><a href="#（二）代码示例-6" class="headerlink" title="（二）代码示例"></a>（二）代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个名为 Processor 的 Trait，它有一个泛型方法 process</span></span><br><span class="line"><span class="keyword">trait</span> <span class="title class_">Processor</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">process</span>&lt;T&gt;(&amp;<span class="keyword">self</span>, item: T);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现 Processor Trait 为 MyProcessor 类型</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">MyProcessor</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Processor</span> <span class="keyword">for</span> <span class="title class_">MyProcessor</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">process</span>&lt;T: std::fmt::Display&gt;(&amp;<span class="keyword">self</span>, item: T) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;处理项: &#123;&#125;&quot;</span>, item);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">processor</span> = MyProcessor;</span><br><span class="line"></span><br><span class="line">    processor.<span class="title function_ invoke__">process</span>(<span class="number">10</span>); <span class="comment">// 输出：处理项: 10</span></span><br><span class="line">    processor.<span class="title function_ invoke__">process</span>(<span class="string">&quot;Hello&quot;</span>); <span class="comment">// 输出：处理项: Hello</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="（三）输出结果-6"><a href="#（三）输出结果-6" class="headerlink" title="（三）输出结果"></a>（三）输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">处理项: 10</span><br><span class="line">处理项: Hello</span><br></pre></td></tr></table></figure>
+
+<h2 id="八、总结"><a href="#八、总结" class="headerlink" title="八、总结"></a>八、总结</h2><p>Trait 是 Rust 中实现多态和代码复用的重要机制。通过定义 Trait，可以为不同的类型提供通用的行为规范。默认方法、Trait 对象、Trait 约束、继承、关联类型和泛型方法等特性使得 Trait 在 Rust 中具有强大的功能和灵活性。掌握 Trait 的使用，可以让你的 Rust 程序更加优雅和高效。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>QYFJ793</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2025/04/11/RUST%E4%B9%8BTrait%E7%89%B9%E6%80%A7/">http://example.com/2025/04/11/RUST%E4%B9%8BTrait%E7%89%B9%E6%80%A7/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2025/04/11/RUST%E4%B9%8BMacro%E5%AE%8F%E7%BC%96%E7%A8%8B/">'RUST之Macro宏编程'</a>
+            
+            
+            <a class="next" rel="next" href="/2025/04/10/RUST%E4%B9%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">'RUST之生命周期'</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© QYFJ793 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

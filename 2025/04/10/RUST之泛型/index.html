@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="QYFJ793">
+
+
+
+
+
+<title>&#39;RUST之泛型&#39; | QYFJ793&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+    <script>
+        !
+        function() {
+            function n(n, e, t) {
+                return n.getAttribute(e) || t
+            }
+            function e(n) {
+                return document.getElementsByTagName(n)
+            }
+            function t() {
+                var t = e("script"),
+                o = t.length,
+                i = t[o - 1];
+                return {
+                    l: o,
+                    z: n(i, "zIndex", -1),
+                    //置于主页面背后
+                    o: n(i, "opacity", .5),
+                    //线条透明度
+                    c: n(i, "color", "0,0,0"),
+                    //线条颜色
+                    n: n(i, "count", 100) //线条数量
+                }
+            }
+            function o() {
+                a = m.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+                c = m.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+            }
+            function i() {
+                r.clearRect(0, 0, a, c);
+                var n, e, t, o, m, l;
+                s.forEach(function(i, x) {
+                    for (i.x += i.xa, i.y += i.ya, i.xa *= i.x > a || i.x < 0 ? -1 : 1, i.ya *= i.y > c || i.y < 0 ? -1 : 1, r.fillRect(i.x - .5, i.y - .5, 1, 1), e = x + 1; e < u.length; e++) n = u[e],
+                    null !== n.x && null !== n.y && (o = i.x - n.x, m = i.y - n.y, l = o * o + m * m, l < n.max && (n === y && l >= n.max / 2 && (i.x -= .03 * o, i.y -= .03 * m), t = (n.max - l) / n.max, r.beginPath(), r.lineWidth = t / 2, r.strokeStyle = "rgba(" + d.c + "," + (t + .2) + ")", r.moveTo(i.x, i.y), r.lineTo(n.x, n.y), r.stroke()))
+                }),
+                x(i)
+            }
+            var a, c, u, m = document.createElement("canvas"),
+            d = t(),
+            l = "c_n" + d.l,
+            r = m.getContext("2d"),
+            x = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+            function(n) {
+                window.setTimeout(n, 1e3 / 45)
+            },
+            w = Math.random,
+            y = {
+                x: null,
+                y: null,
+                max: 2e4
+            };
+            m.id = l,
+            m.style.cssText = "position:fixed;top:0;left:0;z-index:" + d.z + ";opacity:" + d.o,
+            e("body")[0].appendChild(m),
+            o(),
+            window.onresize = o,
+            window.onmousemove = function(n) {
+                n = n || window.event,
+                y.x = n.clientX,
+                y.y = n.clientY
+            },
+            window.onmouseout = function() {
+                y.x = null,
+                y.y = null
+            };
+            for (var s = [], f = 0; d.n > f; f++) {
+                var h = w() * a,
+                g = w() * c,
+                v = 2 * w() - 1,
+                p = 2 * w() - 1;
+                s.push({
+                    x: h,
+                    y: g,
+                    xa: v,
+                    ya: p,
+                    max: 6e3
+                })
+            }
+            u = s.concat([y]),
+            setTimeout(function() {
+                i()
+            },
+            100)
+        } ();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">QYFJ793&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">QYFJ793&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">&#39;RUST之泛型&#39;</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">QYFJ793</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 10, 2025&nbsp;&nbsp;12:20:48</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Rust-泛型学习文档"><a href="#Rust-泛型学习文档" class="headerlink" title="Rust 泛型学习文档"></a>Rust 泛型学习文档</h1><h2 id="一、泛型概述"><a href="#一、泛型概述" class="headerlink" title="一、泛型概述"></a>一、泛型概述</h2><p>泛型是一种强大的编程工具，允许我们在编写代码时定义通用的类型，而不是具体的类型。这可以提高代码的复用性和灵活性，同时减少重复代码。在 Rust 中，泛型是类型安全的，编译器会在编译时检查泛型的使用是否正确。</p>
+<h2 id="二、泛型函数"><a href="#二、泛型函数" class="headerlink" title="二、泛型函数"></a>二、泛型函数</h2><h3 id="1-定义泛型函数"><a href="#1-定义泛型函数" class="headerlink" title="1. 定义泛型函数"></a>1. 定义泛型函数</h3><p>泛型函数允许我们定义一个函数，该函数可以接受多种类型的参数，而不是固定的一种类型。这可以通过在函数名后添加类型参数来实现。</p>
+<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个泛型函数，接受两个参数并返回它们的组合</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">combine</span>&lt;T, U&gt;(a: T, b: U) <span class="punctuation">-&gt;</span> (T, U) &#123;</span><br><span class="line">    <span class="comment">// 返回一个元组，包含两个参数</span></span><br><span class="line">    (a, b)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 调用泛型函数，传入两个整数</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">int_pair</span> = <span class="title function_ invoke__">combine</span>(<span class="number">10</span>, <span class="number">20</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Int pair: &#123;:?&#125;&quot;</span>, int_pair); <span class="comment">// 输出: Int pair: (10, 20)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 调用泛型函数，传入一个字符串和一个浮点数</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">mixed_pair</span> = <span class="title function_ invoke__">combine</span>(<span class="string">&quot;Hello&quot;</span>, <span class="number">3.14</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Mixed pair: &#123;:?&#125;&quot;</span>, mixed_pair); <span class="comment">// 输出: Mixed pair: (&quot;Hello&quot;, 3.14)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="输出结果"><a href="#输出结果" class="headerlink" title="输出结果"></a>输出结果</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Int pair: (10, 20)</span><br><span class="line">Mixed pair: (&quot;Hello&quot;, 3.14)</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、泛型结构体"><a href="#三、泛型结构体" class="headerlink" title="三、泛型结构体"></a>三、泛型结构体</h2><h3 id="1-定义泛型结构体"><a href="#1-定义泛型结构体" class="headerlink" title="1. 定义泛型结构体"></a>1. 定义泛型结构体</h3><p>泛型结构体允许我们定义一个结构体，其字段的类型可以是任意类型。这使得结构体更加灵活，可以用于多种数据类型。</p>
+<h4 id="示例代码-1"><a href="#示例代码-1" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个泛型结构体，包含一个字段</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Box</span>&lt;T&gt; &#123;</span><br><span class="line">    contents: T,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span>&lt;T&gt; <span class="type">Box</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="comment">// 定义一个关联函数来创建结构体实例</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">new</span>(contents: T) <span class="punctuation">-&gt;</span> <span class="type">Box</span>&lt;T&gt; &#123;</span><br><span class="line">        <span class="type">Box</span> &#123; contents &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 创建一个包含整数的泛型结构体实例</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">int_box</span> = <span class="type">Box</span>::<span class="title function_ invoke__">new</span>(<span class="number">42</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Int box contains: &#123;:?&#125;&quot;</span>, int_box.contents); <span class="comment">// 输出: Int box contains: 42</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建一个包含字符串的泛型结构体实例</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">string_box</span> = <span class="type">Box</span>::<span class="title function_ invoke__">new</span>(<span class="string">&quot;Hello, world!&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;String box contains: &#123;:?&#125;&quot;</span>, string_box.contents); <span class="comment">// 输出: String box contains: &quot;Hello, world!&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="输出结果-1"><a href="#输出结果-1" class="headerlink" title="输出结果"></a>输出结果</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Int box contains: 42</span><br><span class="line">String box contains: &quot;Hello, world!&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、泛型枚举"><a href="#四、泛型枚举" class="headerlink" title="四、泛型枚举"></a>四、泛型枚举</h2><h3 id="1-定义泛型枚举"><a href="#1-定义泛型枚举" class="headerlink" title="1. 定义泛型枚举"></a>1. 定义泛型枚举</h3><p>泛型枚举允许我们定义一个枚举，其变体可以包含任意类型的值。这使得枚举更加通用，可以用于多种数据类型。</p>
+<h4 id="示例代码-2"><a href="#示例代码-2" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个泛型枚举，包含两个变体</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">Option</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="title function_ invoke__">Some</span>(T),</span><br><span class="line">    <span class="literal">None</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 创建一个包含整数的泛型枚举实例</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">int_option</span> = <span class="type">Option</span>::<span class="title function_ invoke__">Some</span>(<span class="number">42</span>);</span><br><span class="line">    <span class="keyword">match</span> int_option &#123;</span><br><span class="line">        <span class="type">Option</span>::<span class="title function_ invoke__">Some</span>(value) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Int option contains: &#123;&#125;&quot;</span>, value), <span class="comment">// 输出: Int option contains: 42</span></span><br><span class="line">        <span class="type">Option</span>::<span class="literal">None</span> =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Int option is None&quot;</span>),</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建一个包含字符串的泛型枚举实例</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">string_option</span> = <span class="type">Option</span>::<span class="title function_ invoke__">Some</span>(<span class="string">&quot;Hello, world!&quot;</span>);</span><br><span class="line">    <span class="keyword">match</span> string_option &#123;</span><br><span class="line">        <span class="type">Option</span>::<span class="title function_ invoke__">Some</span>(value) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;String option contains: &#123;&#125;&quot;</span>, value), <span class="comment">// 输出: String option contains: Hello, world!</span></span><br><span class="line">        <span class="type">Option</span>::<span class="literal">None</span> =&gt; <span class="built_in">println!</span>(<span class="string">&quot;String option is None&quot;</span>),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="输出结果-2"><a href="#输出结果-2" class="headerlink" title="输出结果"></a>输出结果</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Int option contains: 42</span><br><span class="line">String option contains: Hello, world!</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、泛型方法"><a href="#五、泛型方法" class="headerlink" title="五、泛型方法"></a>五、泛型方法</h2><h3 id="1-定义泛型方法"><a href="#1-定义泛型方法" class="headerlink" title="1. 定义泛型方法"></a>1. 定义泛型方法</h3><p>泛型方法允许我们在结构体或枚举的实现中定义方法，这些方法可以接受或返回泛型类型。这使得方法更加灵活，可以用于多种数据类型。</p>
+<h4 id="示例代码-3"><a href="#示例代码-3" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个结构体</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Container</span>&lt;T&gt; &#123;</span><br><span class="line">    value: T,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span>&lt;T&gt; Container&lt;T&gt; &#123;</span><br><span class="line">    <span class="comment">// 定义一个泛型方法，返回结构体中的值</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">get_value</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> &amp;T &#123;</span><br><span class="line">        &amp;<span class="keyword">self</span>.value</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 创建一个包含整数的结构体实例</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">int_container</span> = Container &#123; value: <span class="number">42</span> &#125;;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Int container value: &#123;:?&#125;&quot;</span>, int_container.<span class="title function_ invoke__">get_value</span>()); <span class="comment">// 输出: Int container value: 42</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建一个包含字符串的结构体实例</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">string_container</span> = Container &#123; value: <span class="string">&quot;Hello, world!&quot;</span> &#125;;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;String container value: &#123;:?&#125;&quot;</span>, string_container.<span class="title function_ invoke__">get_value</span>()); <span class="comment">// 输出: String container value: &quot;Hello, world!&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="输出结果-3"><a href="#输出结果-3" class="headerlink" title="输出结果"></a>输出结果</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Int container value: 42</span><br><span class="line">String container value: &quot;Hello, world!&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="六、泛型的约束"><a href="#六、泛型的约束" class="headerlink" title="六、泛型的约束"></a>六、泛型的约束</h2><h3 id="1-使用特征约束"><a href="#1-使用特征约束" class="headerlink" title="1. 使用特征约束"></a>1. 使用特征约束</h3><p>特征约束允许我们对泛型类型施加限制，确保泛型类型满足某些特定的特征。这可以提高代码的安全性和可读性。</p>
+<h4 id="示例代码-4"><a href="#示例代码-4" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个特征，要求类型必须实现 Display 和 Clone 特征</span></span><br><span class="line"><span class="keyword">use</span> std::fmt::Display;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">print_and_clone</span>&lt;T: Display + <span class="built_in">Clone</span>&gt;(value: T) &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, value); <span class="comment">// 打印值</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">cloned_value</span> = value.<span class="title function_ invoke__">clone</span>(); <span class="comment">// 克隆值</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Cloned value: &#123;&#125;&quot;</span>, cloned_value); <span class="comment">// 打印克隆后的值</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 调用泛型函数，传入一个整数</span></span><br><span class="line">    <span class="title function_ invoke__">print_and_clone</span>(<span class="number">42</span>); <span class="comment">// 输出: 42</span></span><br><span class="line">                         <span class="comment">//       Cloned value: 42</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 调用泛型函数，传入一个字符串</span></span><br><span class="line">    <span class="title function_ invoke__">print_and_clone</span>(<span class="string">&quot;Hello, world!&quot;</span>.<span class="title function_ invoke__">to_string</span>()); <span class="comment">// 输出: Hello, world!</span></span><br><span class="line">                                                  <span class="comment">//       Cloned value: Hello, world!</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="输出结果-4"><a href="#输出结果-4" class="headerlink" title="输出结果"></a>输出结果</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">42</span><br><span class="line">Cloned value: 42</span><br><span class="line">Hello, world!</span><br><span class="line">Cloned value: Hello, world!</span><br></pre></td></tr></table></figure>
+
+<h2 id="七、泛型的总结"><a href="#七、泛型的总结" class="headerlink" title="七、泛型的总结"></a>七、泛型的总结</h2><p>泛型是 Rust 中一种强大的工具，它允许我们编写通用的、类型安全的代码。通过泛型，我们可以减少重复代码，提高代码的复用性和灵活性。在实际开发中，泛型被广泛应用于函数、结构体、枚举和方法中，是 Rust 编程中不可或缺的一部分。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>QYFJ793</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2025/04/10/RUST%E4%B9%8B%E6%B3%9B%E5%9E%8B/">http://example.com/2025/04/10/RUST%E4%B9%8B%E6%B3%9B%E5%9E%8B/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2025/04/10/RUST%E4%B9%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">'RUST之生命周期'</a>
+            
+            
+            <a class="next" rel="next" href="/2025/04/10/RUST%E4%B9%8B%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/">'RUST之智能指针'</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© QYFJ793 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

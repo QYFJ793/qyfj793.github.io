@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="QYFJ793">
+
+
+
+
+
+<title>&#39;RUST之Macro宏编程&#39; | QYFJ793&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+    <script>
+        !
+        function() {
+            function n(n, e, t) {
+                return n.getAttribute(e) || t
+            }
+            function e(n) {
+                return document.getElementsByTagName(n)
+            }
+            function t() {
+                var t = e("script"),
+                o = t.length,
+                i = t[o - 1];
+                return {
+                    l: o,
+                    z: n(i, "zIndex", -1),
+                    //置于主页面背后
+                    o: n(i, "opacity", .5),
+                    //线条透明度
+                    c: n(i, "color", "0,0,0"),
+                    //线条颜色
+                    n: n(i, "count", 100) //线条数量
+                }
+            }
+            function o() {
+                a = m.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+                c = m.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+            }
+            function i() {
+                r.clearRect(0, 0, a, c);
+                var n, e, t, o, m, l;
+                s.forEach(function(i, x) {
+                    for (i.x += i.xa, i.y += i.ya, i.xa *= i.x > a || i.x < 0 ? -1 : 1, i.ya *= i.y > c || i.y < 0 ? -1 : 1, r.fillRect(i.x - .5, i.y - .5, 1, 1), e = x + 1; e < u.length; e++) n = u[e],
+                    null !== n.x && null !== n.y && (o = i.x - n.x, m = i.y - n.y, l = o * o + m * m, l < n.max && (n === y && l >= n.max / 2 && (i.x -= .03 * o, i.y -= .03 * m), t = (n.max - l) / n.max, r.beginPath(), r.lineWidth = t / 2, r.strokeStyle = "rgba(" + d.c + "," + (t + .2) + ")", r.moveTo(i.x, i.y), r.lineTo(n.x, n.y), r.stroke()))
+                }),
+                x(i)
+            }
+            var a, c, u, m = document.createElement("canvas"),
+            d = t(),
+            l = "c_n" + d.l,
+            r = m.getContext("2d"),
+            x = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+            function(n) {
+                window.setTimeout(n, 1e3 / 45)
+            },
+            w = Math.random,
+            y = {
+                x: null,
+                y: null,
+                max: 2e4
+            };
+            m.id = l,
+            m.style.cssText = "position:fixed;top:0;left:0;z-index:" + d.z + ";opacity:" + d.o,
+            e("body")[0].appendChild(m),
+            o(),
+            window.onresize = o,
+            window.onmousemove = function(n) {
+                n = n || window.event,
+                y.x = n.clientX,
+                y.y = n.clientY
+            },
+            window.onmouseout = function() {
+                y.x = null,
+                y.y = null
+            };
+            for (var s = [], f = 0; d.n > f; f++) {
+                var h = w() * a,
+                g = w() * c,
+                v = 2 * w() - 1,
+                p = 2 * w() - 1;
+                s.push({
+                    x: h,
+                    y: g,
+                    xa: v,
+                    ya: p,
+                    max: 6e3
+                })
+            }
+            u = s.concat([y]),
+            setTimeout(function() {
+                i()
+            },
+            100)
+        } ();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">QYFJ793&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">QYFJ793&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">&#39;RUST之Macro宏编程&#39;</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">QYFJ793</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 11, 2025&nbsp;&nbsp;0:21:53</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Rust-宏编程学习文档"><a href="#Rust-宏编程学习文档" class="headerlink" title="Rust 宏编程学习文档"></a>Rust 宏编程学习文档</h1><h2 id="一、声明式宏（Declarative-Macros）"><a href="#一、声明式宏（Declarative-Macros）" class="headerlink" title="一、声明式宏（Declarative Macros）"></a>一、声明式宏（Declarative Macros）</h2><h3 id="1-1-定义与基本用法"><a href="#1-1-定义与基本用法" class="headerlink" title="1.1 定义与基本用法"></a>1.1 定义与基本用法</h3><p>声明式宏是通过 <code>macro_rules!</code> 定义的，它基于模式匹配来生成代码。这种宏非常适合简单的代码重复场景。</p>
+<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个简单的声明式宏</span></span><br><span class="line"><span class="built_in">macro_rules!</span> greet &#123;</span><br><span class="line">    ($name:expr) =&gt; &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Hello, &#123;&#125;!&quot;</span>, $name);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    greet!(<span class="string">&quot;Alice&quot;</span>); <span class="comment">// 输出：Hello, Alice!</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-模式匹配"><a href="#1-2-模式匹配" class="headerlink" title="1.2 模式匹配"></a>1.2 模式匹配</h3><p>声明式宏支持复杂的模式匹配，可以处理多种不同的输入。</p>
+<h4 id="示例代码-1"><a href="#示例代码-1" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个宏，根据输入的参数数量生成不同的代码</span></span><br><span class="line"><span class="built_in">macro_rules!</span> display &#123;</span><br><span class="line">    ($x:expr) =&gt; &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;One value: &#123;&#125;&quot;</span>, $x);</span><br><span class="line">    &#125;;</span><br><span class="line">    ($x:expr, $y:expr) =&gt; &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Two values: &#123;&#125; and &#123;&#125;&quot;</span>, $x, $y);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    display!(<span class="number">10</span>); <span class="comment">// 输出：One value: 10</span></span><br><span class="line">    display!(<span class="number">10</span>, <span class="number">20</span>); <span class="comment">// 输出：Two values: 10 and 20</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-重复模式"><a href="#1-3-重复模式" class="headerlink" title="1.3 重复模式"></a>1.3 重复模式</h3><p>声明式宏可以使用重复模式来处理可变数量的参数。</p>
+<h4 id="示例代码-2"><a href="#示例代码-2" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个宏，可以接受任意数量的参数并打印它们</span></span><br><span class="line"><span class="built_in">macro_rules!</span> print_all &#123;</span><br><span class="line">    ($( $x:expr ),*) =&gt; &#123;</span><br><span class="line">        &#123;</span><br><span class="line">            $(</span><br><span class="line">                <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, $x);</span><br><span class="line">            )*</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    print_all!(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>); <span class="comment">// 分别输出：1 2 3 4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、过程宏（Procedural-Macros）"><a href="#二、过程宏（Procedural-Macros）" class="headerlink" title="二、过程宏（Procedural Macros）"></a>二、过程宏（Procedural Macros）</h2><h3 id="2-1-定义与类型"><a href="#2-1-定义与类型" class="headerlink" title="2.1 定义与类型"></a>2.1 定义与类型</h3><p>过程宏是一种更强大的宏，允许在编译时操作抽象语法树（AST）。过程宏分为三种类型：</p>
+<ul>
+<li><strong>派生宏（Derive Macros）</strong>：用于自动实现 trait。</li>
+<li><strong>属性宏（Attribute Macros）</strong>：用于在声明上附加额外的元数据。</li>
+<li><strong>类函数宏（Function-like Macros）</strong>：类似于函数调用，但可以生成复杂的代码。</li>
+</ul>
+<h3 id="2-2-自定义派生宏"><a href="#2-2-自定义派生宏" class="headerlink" title="2.2 自定义派生宏"></a>2.2 自定义派生宏</h3><p>派生宏可以通过 <code>#[derive]</code> 属性自动为结构体或枚举生成代码。</p>
+<h4 id="示例代码-3"><a href="#示例代码-3" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个自定义派生宏</span></span><br><span class="line"><span class="keyword">use</span> proc_macro::TokenStream;</span><br><span class="line"><span class="keyword">use</span> quote::quote;</span><br><span class="line"><span class="keyword">use</span> syn::&#123;parse_macro_input, DeriveInput&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[proc_macro_derive(HelloMacro)]</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">hello_macro_derive</span>(input: TokenStream) <span class="punctuation">-&gt;</span> TokenStream &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">input</span> = parse_macro_input!(input <span class="keyword">as</span> DeriveInput);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">name</span> = input.ident;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">gen</span> = quote! &#123;</span><br><span class="line">        <span class="keyword">impl</span> #name &#123;</span><br><span class="line">            <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">hello</span>() &#123;</span><br><span class="line">                <span class="built_in">println!</span>(<span class="string">&quot;Hello from &#123;&#125;&quot;</span>, <span class="built_in">stringify!</span>(#name));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    gen.<span class="title function_ invoke__">into</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(HelloMacro)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">MyStruct</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    MyStruct::<span class="title function_ invoke__">hello</span>(); <span class="comment">// 输出：Hello from MyStruct</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-属性宏"><a href="#2-3-属性宏" class="headerlink" title="2.3 属性宏"></a>2.3 属性宏</h3><p>属性宏允许为代码添加自定义属性。</p>
+<h4 id="示例代码-4"><a href="#示例代码-4" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个属性宏</span></span><br><span class="line"><span class="keyword">use</span> proc_macro::TokenStream;</span><br><span class="line"><span class="keyword">use</span> quote::quote;</span><br><span class="line"><span class="keyword">use</span> syn::&#123;parse_macro_input, ItemFn&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[proc_macro_attribute]</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">my_attribute</span>(_attr: TokenStream, item: TokenStream) <span class="punctuation">-&gt;</span> TokenStream &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">input</span> = parse_macro_input!(item <span class="keyword">as</span> ItemFn);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">name</span> = input.sig.ident;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">gen</span> = quote! &#123;</span><br><span class="line">        <span class="keyword">fn</span> #<span class="title function_ invoke__">name</span>() &#123;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;This function is annotated with my_attribute&quot;</span>);</span><br><span class="line">            #input</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    gen.<span class="title function_ invoke__">into</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用示例-1"><a href="#使用示例-1" class="headerlink" title="使用示例"></a>使用示例</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[my_attribute]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">my_function</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Hello from my_function&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="title function_ invoke__">my_function</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-类函数宏"><a href="#2-4-类函数宏" class="headerlink" title="2.4 类函数宏"></a>2.4 类函数宏</h3><p>类函数宏类似于函数调用，但可以在编译时生成复杂的代码。</p>
+<h4 id="示例代码-5"><a href="#示例代码-5" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个类函数宏</span></span><br><span class="line"><span class="keyword">use</span> proc_macro::TokenStream;</span><br><span class="line"><span class="keyword">use</span> quote::quote;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[proc_macro]</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">my_macro</span>(input: TokenStream) <span class="punctuation">-&gt;</span> TokenStream &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">input</span> = input.<span class="title function_ invoke__">to_string</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">gen</span> = quote! &#123;</span><br><span class="line">        <span class="keyword">fn</span> <span class="title function_">my_function</span>() &#123;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;Generated function: &#123;&#125;&quot;</span>, #input);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    gen.<span class="title function_ invoke__">into</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用示例-2"><a href="#使用示例-2" class="headerlink" title="使用示例"></a>使用示例</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">my_macro!(<span class="string">&quot;Hello, Rust!&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="title function_ invoke__">my_function</span>(); <span class="comment">// 输出：Generated function: Hello, Rust!</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、宏的模式匹配"><a href="#三、宏的模式匹配" class="headerlink" title="三、宏的模式匹配"></a>三、宏的模式匹配</h2><p>无论是声明式宏还是过程宏，模式匹配都是一个核心概念。在声明式宏中，模式匹配用于定义宏的行为；在过程宏中，模式匹配用于解析输入的代码。</p>
+<h3 id="示例代码-6"><a href="#示例代码-6" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明式宏的模式匹配</span></span><br><span class="line"><span class="built_in">macro_rules!</span> match_example &#123;</span><br><span class="line">    (x =&gt; $e:expr) =&gt; &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Matched x =&gt; &#123;&#125;&quot;</span>, $e);</span><br><span class="line">    &#125;;</span><br><span class="line">    (y =&gt; $e:expr) =&gt; &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Matched y =&gt; &#123;&#125;&quot;</span>, $e);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    match_example!(x =&gt; <span class="number">10</span>); <span class="comment">// 输出：Matched x =&gt; 10</span></span><br><span class="line">    match_example!(y =&gt; <span class="number">20</span>); <span class="comment">// 输出：Matched y =&gt; 20</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h2><p>Rust 宏分为声明式宏和过程宏。声明式宏通过 <code>macro_rules!</code> 定义，适合简单的代码重复场景；过程宏则通过编译器扩展实现，功能更强大，适用于复杂的代码生成。无论是哪种宏，模式匹配都是其核心机制。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>QYFJ793</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2025/04/11/RUST%E4%B9%8BMacro%E5%AE%8F%E7%BC%96%E7%A8%8B/">http://example.com/2025/04/11/RUST%E4%B9%8BMacro%E5%AE%8F%E7%BC%96%E7%A8%8B/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2025/04/11/RUST%E4%B9%8B%E9%97%AD%E5%8C%85/">'RUST之闭包'</a>
+            
+            
+            <a class="next" rel="next" href="/2025/04/11/RUST%E4%B9%8BTrait%E7%89%B9%E6%80%A7/">'RUST之Trait特性'</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© QYFJ793 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

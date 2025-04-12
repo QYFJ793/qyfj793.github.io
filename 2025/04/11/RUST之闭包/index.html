@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="QYFJ793">
+
+
+
+
+
+<title>&#39;RUST之闭包&#39; | QYFJ793&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+    <script>
+        !
+        function() {
+            function n(n, e, t) {
+                return n.getAttribute(e) || t
+            }
+            function e(n) {
+                return document.getElementsByTagName(n)
+            }
+            function t() {
+                var t = e("script"),
+                o = t.length,
+                i = t[o - 1];
+                return {
+                    l: o,
+                    z: n(i, "zIndex", -1),
+                    //置于主页面背后
+                    o: n(i, "opacity", .5),
+                    //线条透明度
+                    c: n(i, "color", "0,0,0"),
+                    //线条颜色
+                    n: n(i, "count", 100) //线条数量
+                }
+            }
+            function o() {
+                a = m.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+                c = m.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+            }
+            function i() {
+                r.clearRect(0, 0, a, c);
+                var n, e, t, o, m, l;
+                s.forEach(function(i, x) {
+                    for (i.x += i.xa, i.y += i.ya, i.xa *= i.x > a || i.x < 0 ? -1 : 1, i.ya *= i.y > c || i.y < 0 ? -1 : 1, r.fillRect(i.x - .5, i.y - .5, 1, 1), e = x + 1; e < u.length; e++) n = u[e],
+                    null !== n.x && null !== n.y && (o = i.x - n.x, m = i.y - n.y, l = o * o + m * m, l < n.max && (n === y && l >= n.max / 2 && (i.x -= .03 * o, i.y -= .03 * m), t = (n.max - l) / n.max, r.beginPath(), r.lineWidth = t / 2, r.strokeStyle = "rgba(" + d.c + "," + (t + .2) + ")", r.moveTo(i.x, i.y), r.lineTo(n.x, n.y), r.stroke()))
+                }),
+                x(i)
+            }
+            var a, c, u, m = document.createElement("canvas"),
+            d = t(),
+            l = "c_n" + d.l,
+            r = m.getContext("2d"),
+            x = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+            function(n) {
+                window.setTimeout(n, 1e3 / 45)
+            },
+            w = Math.random,
+            y = {
+                x: null,
+                y: null,
+                max: 2e4
+            };
+            m.id = l,
+            m.style.cssText = "position:fixed;top:0;left:0;z-index:" + d.z + ";opacity:" + d.o,
+            e("body")[0].appendChild(m),
+            o(),
+            window.onresize = o,
+            window.onmousemove = function(n) {
+                n = n || window.event,
+                y.x = n.clientX,
+                y.y = n.clientY
+            },
+            window.onmouseout = function() {
+                y.x = null,
+                y.y = null
+            };
+            for (var s = [], f = 0; d.n > f; f++) {
+                var h = w() * a,
+                g = w() * c,
+                v = 2 * w() - 1,
+                p = 2 * w() - 1;
+                s.push({
+                    x: h,
+                    y: g,
+                    xa: v,
+                    ya: p,
+                    max: 6e3
+                })
+            }
+            u = s.concat([y]),
+            setTimeout(function() {
+                i()
+            },
+            100)
+        } ();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">QYFJ793&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">QYFJ793&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">&#39;RUST之闭包&#39;</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">QYFJ793</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 11, 2025&nbsp;&nbsp;0:22:04</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Rust-闭包学习文档"><a href="#Rust-闭包学习文档" class="headerlink" title="Rust 闭包学习文档"></a>Rust 闭包学习文档</h1><h2 id="一、闭包简介"><a href="#一、闭包简介" class="headerlink" title="一、闭包简介"></a>一、闭包简介</h2><p>闭包是 Rust 中一种匿名函数，它可以捕获其周围的作用域中的变量。闭包在函数式编程中非常有用，可以用于实现回调、迭代器适配器等场景。</p>
+<h3 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个闭包，捕获变量x并打印</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = <span class="number">5</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">print_x</span> = || &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;x is &#123;&#125;&quot;</span>, x);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="title function_ invoke__">print_x</span>(); <span class="comment">// 调用闭包</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="输出结果"><a href="#输出结果" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x is 5</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、闭包的捕获模式"><a href="#二、闭包的捕获模式" class="headerlink" title="二、闭包的捕获模式"></a>二、闭包的捕获模式</h2><p>闭包可以以不同的方式捕获变量，主要有三种模式：<code>move</code>、<code>borrow</code> 和 <code>clone</code>。</p>
+<h3 id="1-move-捕获"><a href="#1-move-捕获" class="headerlink" title="1. move 捕获"></a>1. <code>move</code> 捕获</h3><p>使用 <code>move</code> 关键字可以将变量的所有权移动到闭包中，闭包可以完全控制这些变量。</p>
+<h4 id="示例代码-1"><a href="#示例代码-1" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"><span class="keyword">let</span> <span class="variable">print_x</span> = <span class="keyword">move</span> || &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, x);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="title function_ invoke__">print_x</span>(); <span class="comment">// 调用闭包</span></span><br><span class="line"><span class="comment">// println!(&quot;&#123;:?&#125;&quot;, x); // 错误，x的所有权已经移动到闭包中</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="输出结果-1"><a href="#输出结果-1" class="headerlink" title="输出结果"></a>输出结果</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[1, 2, 3]</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-borrow-捕获（默认模式）"><a href="#2-borrow-捕获（默认模式）" class="headerlink" title="2. borrow 捕获（默认模式）"></a>2. <code>borrow</code> 捕获（默认模式）</h3><p>如果不使用 <code>move</code>，闭包会默认以引用的方式捕获变量，闭包只能读取这些变量。</p>
+<h4 id="示例代码-2"><a href="#示例代码-2" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"><span class="keyword">let</span> <span class="variable">print_x</span> = || &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, x);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="title function_ invoke__">print_x</span>(); <span class="comment">// 调用闭包</span></span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, x); <span class="comment">// 可以正常访问x</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="输出结果-2"><a href="#输出结果-2" class="headerlink" title="输出结果"></a>输出结果</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[1, 2, 3]</span><br><span class="line">[1, 2, 3]</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-clone-捕获"><a href="#3-clone-捕获" class="headerlink" title="3. clone 捕获"></a>3. <code>clone</code> 捕获</h3><p>通过显式克隆变量，闭包可以拥有变量的副本，而不会影响原始变量。</p>
+<h4 id="示例代码-3"><a href="#示例代码-3" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"><span class="keyword">let</span> <span class="variable">print_x</span> = &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = x.<span class="title function_ invoke__">clone</span>(); <span class="comment">// 显式克隆</span></span><br><span class="line">    <span class="keyword">move</span> || &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, x);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="title function_ invoke__">print_x</span>(); <span class="comment">// 调用闭包</span></span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, x); <span class="comment">// 原始变量仍然可用</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="输出结果-3"><a href="#输出结果-3" class="headerlink" title="输出结果"></a>输出结果</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[1, 2, 3]</span><br><span class="line">[1, 2, 3]</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、闭包的参数和返回值"><a href="#三、闭包的参数和返回值" class="headerlink" title="三、闭包的参数和返回值"></a>三、闭包的参数和返回值</h2><p>闭包可以有参数和返回值，类似于普通函数。</p>
+<h3 id="示例代码-4"><a href="#示例代码-4" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">add</span> = |a: <span class="type">i32</span>, b: <span class="type">i32</span>| <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">    a + b</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">result</span> = <span class="title function_ invoke__">add</span>(<span class="number">3</span>, <span class="number">5</span>);</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;Result is &#123;&#125;&quot;</span>, result);</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出结果-4"><a href="#输出结果-4" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Result is 8</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、闭包的类型推断"><a href="#四、闭包的类型推断" class="headerlink" title="四、闭包的类型推断"></a>四、闭包的类型推断</h2><p>Rust 编译器可以自动推断闭包的参数类型和返回值类型，通常不需要显式指定。</p>
+<h3 id="示例代码-5"><a href="#示例代码-5" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">add</span> = |a, b| a + b; <span class="comment">// 编译器自动推断参数类型和返回值类型</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">result</span> = <span class="title function_ invoke__">add</span>(<span class="number">3</span>, <span class="number">5</span>);</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;Result is &#123;&#125;&quot;</span>, result);</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出结果-5"><a href="#输出结果-5" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Result is 8</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、闭包与迭代器"><a href="#五、闭包与迭代器" class="headerlink" title="五、闭包与迭代器"></a>五、闭包与迭代器</h2><p>闭包常用于迭代器的适配器，如 <code>map</code>、<code>filter</code> 等。</p>
+<h3 id="示例代码-6"><a href="#示例代码-6" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">numbers</span> = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">let</span> <span class="variable">doubled</span>: <span class="type">Vec</span>&lt;<span class="type">i32</span>&gt; = numbers.<span class="title function_ invoke__">iter</span>().<span class="title function_ invoke__">map</span>(|&amp;x| x * <span class="number">2</span>).<span class="title function_ invoke__">collect</span>();</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, doubled);</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出结果-6"><a href="#输出结果-6" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[2, 4, 6, 8, 10]</span><br></pre></td></tr></table></figure>
+
+<h2 id="六、闭包的生命周期"><a href="#六、闭包的生命周期" class="headerlink" title="六、闭包的生命周期"></a>六、闭包的生命周期</h2><p>闭包的生命周期取决于捕获的变量的生命周期。如果闭包捕获了变量的所有权（<code>move</code>），则闭包的生命周期与捕获的变量的生命周期相同。</p>
+<h3 id="示例代码-7"><a href="#示例代码-7" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">c</span> = <span class="keyword">move</span> || <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, x);</span><br><span class="line">    <span class="title function_ invoke__">c</span>();</span><br><span class="line">    <span class="comment">// x 的生命周期在闭包 c 被调用时结束</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出结果-7"><a href="#输出结果-7" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello</span><br></pre></td></tr></table></figure>
+
+<h2 id="七、闭包的限制"><a href="#七、闭包的限制" class="headerlink" title="七、闭包的限制"></a>七、闭包的限制</h2><p>闭包不能捕获可变引用，除非闭包本身是可变的。</p>
+<h3 id="示例代码-8"><a href="#示例代码-8" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">x</span> = <span class="number">5</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">c</span> = || &#123;</span><br><span class="line">    x += <span class="number">1</span>; <span class="comment">// 错误，闭包捕获了不可变引用</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="title function_ invoke__">c</span>();</span><br></pre></td></tr></table></figure>
+
+<h3 id="修正代码"><a href="#修正代码" class="headerlink" title="修正代码"></a>修正代码</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">x</span> = <span class="number">5</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">c</span> = || &#123;</span><br><span class="line">    x += <span class="number">1</span>; <span class="comment">// 正确，闭包是可变的</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="title function_ invoke__">c</span>();</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;x is &#123;&#125;&quot;</span>, x);</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出结果-8"><a href="#输出结果-8" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x is 6</span><br></pre></td></tr></table></figure>
+
+<h2 id="八、闭包的高级用法"><a href="#八、闭包的高级用法" class="headerlink" title="八、闭包的高级用法"></a>八、闭包的高级用法</h2><p>闭包可以用于实现复杂的逻辑，如回调函数、异步编程等。</p>
+<h3 id="示例代码-9"><a href="#示例代码-9" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">x</span> = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">c</span> = || &#123;</span><br><span class="line">        x += <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;x is &#123;&#125;&quot;</span>, x);</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="title function_ invoke__">c</span>(); <span class="comment">// 调用闭包</span></span><br><span class="line">    <span class="title function_ invoke__">c</span>(); <span class="comment">// 再次调用闭包</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出结果-9"><a href="#输出结果-9" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x is 6</span><br><span class="line">x is 7</span><br></pre></td></tr></table></figure>
+
+<h2 id="九、总结"><a href="#九、总结" class="headerlink" title="九、总结"></a>九、总结</h2><p>闭包是 Rust 中一种强大的特性，可以捕获变量并实现匿名函数的功能。通过合理使用闭包，可以简化代码逻辑，提高代码的可读性和可维护性。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>QYFJ793</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2025/04/11/RUST%E4%B9%8B%E9%97%AD%E5%8C%85/">http://example.com/2025/04/11/RUST%E4%B9%8B%E9%97%AD%E5%8C%85/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2025/04/12/RUST%E4%B9%8B%E8%BF%AD%E4%BB%A3%E5%99%A8%E4%B8%8E%E5%85%B3%E8%81%94%E7%B1%BB%E5%9E%8B/">'RUST之迭代器与关联类型'</a>
+            
+            
+            <a class="next" rel="next" href="/2025/04/11/RUST%E4%B9%8BMacro%E5%AE%8F%E7%BC%96%E7%A8%8B/">'RUST之Macro宏编程'</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© QYFJ793 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

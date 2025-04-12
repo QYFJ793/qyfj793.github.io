@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="QYFJ793">
+
+
+
+
+
+<title>&#39;RUST之test测试&#39; | QYFJ793&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+    <script>
+        !
+        function() {
+            function n(n, e, t) {
+                return n.getAttribute(e) || t
+            }
+            function e(n) {
+                return document.getElementsByTagName(n)
+            }
+            function t() {
+                var t = e("script"),
+                o = t.length,
+                i = t[o - 1];
+                return {
+                    l: o,
+                    z: n(i, "zIndex", -1),
+                    //置于主页面背后
+                    o: n(i, "opacity", .5),
+                    //线条透明度
+                    c: n(i, "color", "0,0,0"),
+                    //线条颜色
+                    n: n(i, "count", 100) //线条数量
+                }
+            }
+            function o() {
+                a = m.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+                c = m.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+            }
+            function i() {
+                r.clearRect(0, 0, a, c);
+                var n, e, t, o, m, l;
+                s.forEach(function(i, x) {
+                    for (i.x += i.xa, i.y += i.ya, i.xa *= i.x > a || i.x < 0 ? -1 : 1, i.ya *= i.y > c || i.y < 0 ? -1 : 1, r.fillRect(i.x - .5, i.y - .5, 1, 1), e = x + 1; e < u.length; e++) n = u[e],
+                    null !== n.x && null !== n.y && (o = i.x - n.x, m = i.y - n.y, l = o * o + m * m, l < n.max && (n === y && l >= n.max / 2 && (i.x -= .03 * o, i.y -= .03 * m), t = (n.max - l) / n.max, r.beginPath(), r.lineWidth = t / 2, r.strokeStyle = "rgba(" + d.c + "," + (t + .2) + ")", r.moveTo(i.x, i.y), r.lineTo(n.x, n.y), r.stroke()))
+                }),
+                x(i)
+            }
+            var a, c, u, m = document.createElement("canvas"),
+            d = t(),
+            l = "c_n" + d.l,
+            r = m.getContext("2d"),
+            x = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+            function(n) {
+                window.setTimeout(n, 1e3 / 45)
+            },
+            w = Math.random,
+            y = {
+                x: null,
+                y: null,
+                max: 2e4
+            };
+            m.id = l,
+            m.style.cssText = "position:fixed;top:0;left:0;z-index:" + d.z + ";opacity:" + d.o,
+            e("body")[0].appendChild(m),
+            o(),
+            window.onresize = o,
+            window.onmousemove = function(n) {
+                n = n || window.event,
+                y.x = n.clientX,
+                y.y = n.clientY
+            },
+            window.onmouseout = function() {
+                y.x = null,
+                y.y = null
+            };
+            for (var s = [], f = 0; d.n > f; f++) {
+                var h = w() * a,
+                g = w() * c,
+                v = 2 * w() - 1,
+                p = 2 * w() - 1;
+                s.push({
+                    x: h,
+                    y: g,
+                    xa: v,
+                    ya: p,
+                    max: 6e3
+                })
+            }
+            u = s.concat([y]),
+            setTimeout(function() {
+                i()
+            },
+            100)
+        } ();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">QYFJ793&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">QYFJ793&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">&#39;RUST之test测试&#39;</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">QYFJ793</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 12, 2025&nbsp;&nbsp;1:25:33</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Rust-编程语言中的测试学习文档"><a href="#Rust-编程语言中的测试学习文档" class="headerlink" title="Rust 编程语言中的测试学习文档"></a>Rust 编程语言中的测试学习文档</h1><h2 id="一、单元测试（Unit-Tests）"><a href="#一、单元测试（Unit-Tests）" class="headerlink" title="一、单元测试（Unit Tests）"></a>一、单元测试（Unit Tests）</h2><p>单元测试用于测试单个函数或模块的功能是否正常。在 Rust 中，单元测试通常写在模块内部的 <code>#[cfg(test)]</code> 模块中。</p>
+<h3 id="1-1-测试一个简单函数"><a href="#1-1-测试一个简单函数" class="headerlink" title="1.1 测试一个简单函数"></a>1.1 测试一个简单函数</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个函数，用于计算两个数的和</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">add</span>(a: <span class="type">i32</span>, b: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">    a + b</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 `#[cfg(test)]` 定义测试模块</span></span><br><span class="line"><span class="meta">#[cfg(test)]</span></span><br><span class="line"><span class="keyword">mod</span> tests &#123;</span><br><span class="line">    <span class="comment">// 引入当前模块的函数</span></span><br><span class="line">    <span class="keyword">use</span> super::*;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 定义一个测试函数</span></span><br><span class="line">    <span class="meta">#[test]</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">test_add</span>() &#123;</span><br><span class="line">        <span class="comment">// 调用函数并断言结果是否正确</span></span><br><span class="line">        <span class="built_in">assert_eq!</span>(<span class="title function_ invoke__">add</span>(<span class="number">2</span>, <span class="number">3</span>), <span class="number">5</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出结果：</strong><br>运行测试后，如果函数实现正确，测试将通过。测试通过时，Rust 测试框架会输出类似以下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">running 1 test</span><br><span class="line">test tests::test_add ... ok</span><br><span class="line"></span><br><span class="line">test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-测试函数的错误情况"><a href="#1-2-测试函数的错误情况" class="headerlink" title="1.2 测试函数的错误情况"></a>1.2 测试函数的错误情况</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个函数，用于计算两个数的除法</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">divide</span>(a: <span class="type">i32</span>, b: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">Result</span>&lt;<span class="type">i32</span>, &amp;<span class="symbol">&#x27;static</span> <span class="type">str</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> b == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="comment">// 如果除数为 0，返回错误</span></span><br><span class="line">        <span class="title function_ invoke__">Err</span>(<span class="string">&quot;Cannot divide by zero&quot;</span>)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 否则返回结果</span></span><br><span class="line">        <span class="title function_ invoke__">Ok</span>(a / b)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[cfg(test)]</span></span><br><span class="line"><span class="keyword">mod</span> tests &#123;</span><br><span class="line">    <span class="keyword">use</span> super::*;</span><br><span class="line"></span><br><span class="line">    <span class="meta">#[test]</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">test_divide_success</span>() &#123;</span><br><span class="line">        <span class="comment">// 测试正常情况</span></span><br><span class="line">        <span class="built_in">assert_eq!</span>(<span class="title function_ invoke__">divide</span>(<span class="number">10</span>, <span class="number">2</span>), <span class="title function_ invoke__">Ok</span>(<span class="number">5</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">#[test]</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">test_divide_failure</span>() &#123;</span><br><span class="line">        <span class="comment">// 测试错误情况</span></span><br><span class="line">        <span class="built_in">assert_eq!</span>(<span class="title function_ invoke__">divide</span>(<span class="number">10</span>, <span class="number">0</span>), <span class="title function_ invoke__">Err</span>(<span class="string">&quot;Cannot divide by zero&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出结果：</strong><br>如果两个测试都通过，输出如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">running 2 tests</span><br><span class="line">test tests::test_divide_success ... ok</span><br><span class="line">test tests::test_divide_failure ... ok</span><br><span class="line"></span><br><span class="line">test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、集成测试（Integration-Tests）"><a href="#二、集成测试（Integration-Tests）" class="headerlink" title="二、集成测试（Integration Tests）"></a>二、集成测试（Integration Tests）</h2><p>集成测试用于测试整个程序或多个模块之间的交互是否正常。集成测试通常写在 <code>tests</code> 目录下的文件中。</p>
+<h3 id="2-1-测试一个模块的功能"><a href="#2-1-测试一个模块的功能" class="headerlink" title="2.1 测试一个模块的功能"></a>2.1 测试一个模块的功能</h3><p>假设我们有一个模块 <code>calculator</code>，包含加法和减法功能。</p>
+<p><strong><code>src/calculator.rs</code></strong></p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">add</span>(a: <span class="type">i32</span>, b: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">    a + b</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">subtract</span>(a: <span class="type">i32</span>, b: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">    a - b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>tests</code> 目录下创建一个文件 <code>calculator_tests.rs</code>，用于测试这个模块。</p>
+<p><strong><code>tests/calculator_tests.rs</code></strong></p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 引入被测试的模块</span></span><br><span class="line"><span class="keyword">mod</span> calculator;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[test]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">test_add</span>() &#123;</span><br><span class="line">    <span class="comment">// 测试加法功能</span></span><br><span class="line">    <span class="built_in">assert_eq!</span>(calculator::<span class="title function_ invoke__">add</span>(<span class="number">5</span>, <span class="number">3</span>), <span class="number">8</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[test]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">test_subtract</span>() &#123;</span><br><span class="line">    <span class="comment">// 测试减法功能</span></span><br><span class="line">    <span class="built_in">assert_eq!</span>(calculator::<span class="title function_ invoke__">subtract</span>(<span class="number">5</span>, <span class="number">3</span>), <span class="number">2</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出结果：</strong><br>运行测试后，如果两个函数实现正确，测试将通过。输出如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">running 2 tests</span><br><span class="line">test test_add ... ok</span><br><span class="line">test test_subtract ... ok</span><br><span class="line"></span><br><span class="line">test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、使用断言（Assertions）"><a href="#三、使用断言（Assertions）" class="headerlink" title="三、使用断言（Assertions）"></a>三、使用断言（Assertions）</h2><p>断言是测试中用于验证结果是否符合预期的关键工具。Rust 提供了多种断言宏。</p>
+<h3 id="3-1-assert-eq-和-assert-ne"><a href="#3-1-assert-eq-和-assert-ne" class="headerlink" title="3.1 assert_eq! 和 assert_ne!"></a>3.1 <code>assert_eq!</code> 和 <code>assert_ne!</code></h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[cfg(test)]</span></span><br><span class="line"><span class="keyword">mod</span> tests &#123;</span><br><span class="line">    <span class="meta">#[test]</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">test_assert_eq</span>() &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">a</span> = <span class="number">5</span>;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">b</span> = <span class="number">5</span>;</span><br><span class="line">        <span class="comment">// 断言两个值是否相等</span></span><br><span class="line">        <span class="built_in">assert_eq!</span>(a, b);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">#[test]</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">test_assert_ne</span>() &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">a</span> = <span class="number">5</span>;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">b</span> = <span class="number">10</span>;</span><br><span class="line">        <span class="comment">// 断言两个值是否不相等</span></span><br><span class="line">        <span class="built_in">assert_ne!</span>(a, b);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出结果：</strong><br>如果两个测试都通过，输出如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">running 2 tests</span><br><span class="line">test tests::test_assert_eq ... ok</span><br><span class="line">test tests::test_assert_ne ... ok</span><br><span class="line"></span><br><span class="line">test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-assert"><a href="#3-2-assert" class="headerlink" title="3.2 assert!"></a>3.2 <code>assert!</code></h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[cfg(test)]</span></span><br><span class="line"><span class="keyword">mod</span> tests &#123;</span><br><span class="line">    <span class="meta">#[test]</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">test_assert</span>() &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">a</span> = <span class="number">5</span>;</span><br><span class="line">        <span class="comment">// 断言某个条件是否为真</span></span><br><span class="line">        <span class="built_in">assert!</span>(a &gt; <span class="number">0</span>, <span class="string">&quot;a should be greater than 0&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出结果：</strong><br>如果测试通过，输出如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">running 1 test</span><br><span class="line">test tests::test_assert ... ok</span><br><span class="line"></span><br><span class="line">test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、测试失败的处理"><a href="#四、测试失败的处理" class="headerlink" title="四、测试失败的处理"></a>四、测试失败的处理</h2><p>当测试失败时，Rust 会提供详细的错误信息，帮助我们定位问题。</p>
+<h3 id="4-1-测试失败的示例"><a href="#4-1-测试失败的示例" class="headerlink" title="4.1 测试失败的示例"></a>4.1 测试失败的示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[cfg(test)]</span></span><br><span class="line"><span class="keyword">mod</span> tests &#123;</span><br><span class="line">    <span class="meta">#[test]</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">test_fail</span>() &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">a</span> = <span class="number">5</span>;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">b</span> = <span class="number">10</span>;</span><br><span class="line">        <span class="comment">// 故意让断言失败</span></span><br><span class="line">        <span class="built_in">assert_eq!</span>(a, b);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出结果：</strong><br>运行测试后，测试失败，输出如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">running 1 test</span><br><span class="line">test tests::test_fail ... FAILED</span><br><span class="line"></span><br><span class="line">failures:</span><br><span class="line"></span><br><span class="line">---- tests::test_fail stdout ----</span><br><span class="line">thread &#x27;tests::test_fail&#x27; panicked at &#x27;assertion failed: `(left == right)`</span><br><span class="line">  left: `5`,</span><br><span class="line"> right: `10`&#x27;, src/lib.rs:11:9</span><br><span class="line">note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace</span><br><span class="line"></span><br><span class="line">test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s</span><br></pre></td></tr></table></figure>
+
+<p>从输出中可以看到，测试失败的原因是 <code>assert_eq!(a, b)</code> 中的 <code>a</code> 和 <code>b</code> 不相等，Rust 提供了详细的值对比信息。</p>
+<h2 id="五、忽略测试"><a href="#五、忽略测试" class="headerlink" title="五、忽略测试"></a>五、忽略测试</h2><p>如果某些测试暂时不想运行，可以使用 <code>#[ignore]</code> 属性。</p>
+<h3 id="5-1-忽略测试示例"><a href="#5-1-忽略测试示例" class="headerlink" title="5.1 忽略测试示例"></a>5.1 忽略测试示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[cfg(test)]</span></span><br><span class="line"><span class="keyword">mod</span> tests &#123;</span><br><span class="line">    <span class="meta">#[test]</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">test_run</span>() &#123;</span><br><span class="line">        <span class="comment">// 这个测试会运行</span></span><br><span class="line">        <span class="built_in">assert!</span>(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">#[test]</span></span><br><span class="line">    <span class="meta">#[ignore]</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">test_ignore</span>() &#123;</span><br><span class="line">        <span class="comment">// 这个测试会被忽略</span></span><br><span class="line">        <span class="built_in">assert!</span>(<span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出结果：</strong><br>运行测试后，被忽略的测试不会执行，输出如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">running 2 tests</span><br><span class="line">test tests::test_run ... ok</span><br><span class="line">test tests::test_ignore ... ignored</span><br><span class="line"></span><br><span class="line">test result: ok. 1 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s</span><br></pre></td></tr></table></figure>
+
+<h2 id="六、测试的组织"><a href="#六、测试的组织" class="headerlink" title="六、测试的组织"></a>六、测试的组织</h2><p>可以将测试组织成多个模块，方便管理。</p>
+<h3 id="6-1-测试模块的组织"><a href="#6-1-测试模块的组织" class="headerlink" title="6.1 测试模块的组织"></a>6.1 测试模块的组织</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[cfg(test)]</span></span><br><span class="line"><span class="keyword">mod</span> tests &#123;</span><br><span class="line">    <span class="meta">#[test]</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">test_one</span>() &#123;</span><br><span class="line">        <span class="built_in">assert!</span>(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">#[test]</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">test_two</span>() &#123;</span><br><span class="line">        <span class="built_in">assert!</span>(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[cfg(test)]</span></span><br><span class="line"><span class="keyword">mod</span> more_tests &#123;</span><br><span class="line">    <span class="meta">#[test]</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">test_three</span>() &#123;</span><br><span class="line">        <span class="built_in">assert!</span>(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">#[test]</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">test_four</span>() &#123;</span><br><span class="line">        <span class="built_in">assert!</span>(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出结果：</strong><br>运行测试后，所有测试都会被运行，输出如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">running 4 tests</span><br><span class="line">test tests::test_one ... ok</span><br><span class="line">test tests::test_two ... ok</span><br><span class="line">test more_tests::test_three ... ok</span><br><span class="line">test more_tests::test_four ... ok</span><br><span class="line"></span><br><span class="line">test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s</span><br></pre></td></tr></table></figure>
+
+<h2 id="七、测试的运行"><a href="#七、测试的运行" class="headerlink" title="七、测试的运行"></a>七、测试的运行</h2><p>运行测试的命令是 <code>cargo test</code>，它会自动发现并运行项目中的所有测试。</p>
+<h3 id="7-1-运行特定测试"><a href="#7-1-运行特定测试" class="headerlink" title="7.1 运行特定测试"></a>7.1 运行特定测试</h3><p>可以通过指定测试名称来运行特定的测试。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo <span class="built_in">test</span> test_name</span><br></pre></td></tr></table></figure>
+
+<p>例如，运行名为 <code>test_add</code> 的测试：</p>
+<pre><code class="bash">cargo test
+</code></pre>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>QYFJ793</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2025/04/12/RUST%E4%B9%8Btest%E6%B5%8B%E8%AF%95/">http://example.com/2025/04/12/RUST%E4%B9%8Btest%E6%B5%8B%E8%AF%95/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2025/04/12/RUST%E4%B9%8B%E5%B9%B6%E5%8F%91-%E6%A6%82%E5%BF%B5%E3%80%81%E7%BA%BF%E7%A8%8B%E3%80%81%E9%80%9A%E4%BF%A1/">RUST之概念、线程、通信'</a>
+            
+            
+            <a class="next" rel="next" href="/2025/04/12/RUST%E4%B9%8B%E8%BF%AD%E4%BB%A3%E5%99%A8%E4%B8%8E%E5%85%B3%E8%81%94%E7%B1%BB%E5%9E%8B/">'RUST之迭代器与关联类型'</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© QYFJ793 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

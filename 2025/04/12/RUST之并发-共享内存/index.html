@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="QYFJ793">
+
+
+
+
+
+<title>&#39;RUST之并发-共享内存&#39; | QYFJ793&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+    <script>
+        !
+        function() {
+            function n(n, e, t) {
+                return n.getAttribute(e) || t
+            }
+            function e(n) {
+                return document.getElementsByTagName(n)
+            }
+            function t() {
+                var t = e("script"),
+                o = t.length,
+                i = t[o - 1];
+                return {
+                    l: o,
+                    z: n(i, "zIndex", -1),
+                    //置于主页面背后
+                    o: n(i, "opacity", .5),
+                    //线条透明度
+                    c: n(i, "color", "0,0,0"),
+                    //线条颜色
+                    n: n(i, "count", 100) //线条数量
+                }
+            }
+            function o() {
+                a = m.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+                c = m.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+            }
+            function i() {
+                r.clearRect(0, 0, a, c);
+                var n, e, t, o, m, l;
+                s.forEach(function(i, x) {
+                    for (i.x += i.xa, i.y += i.ya, i.xa *= i.x > a || i.x < 0 ? -1 : 1, i.ya *= i.y > c || i.y < 0 ? -1 : 1, r.fillRect(i.x - .5, i.y - .5, 1, 1), e = x + 1; e < u.length; e++) n = u[e],
+                    null !== n.x && null !== n.y && (o = i.x - n.x, m = i.y - n.y, l = o * o + m * m, l < n.max && (n === y && l >= n.max / 2 && (i.x -= .03 * o, i.y -= .03 * m), t = (n.max - l) / n.max, r.beginPath(), r.lineWidth = t / 2, r.strokeStyle = "rgba(" + d.c + "," + (t + .2) + ")", r.moveTo(i.x, i.y), r.lineTo(n.x, n.y), r.stroke()))
+                }),
+                x(i)
+            }
+            var a, c, u, m = document.createElement("canvas"),
+            d = t(),
+            l = "c_n" + d.l,
+            r = m.getContext("2d"),
+            x = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+            function(n) {
+                window.setTimeout(n, 1e3 / 45)
+            },
+            w = Math.random,
+            y = {
+                x: null,
+                y: null,
+                max: 2e4
+            };
+            m.id = l,
+            m.style.cssText = "position:fixed;top:0;left:0;z-index:" + d.z + ";opacity:" + d.o,
+            e("body")[0].appendChild(m),
+            o(),
+            window.onresize = o,
+            window.onmousemove = function(n) {
+                n = n || window.event,
+                y.x = n.clientX,
+                y.y = n.clientY
+            },
+            window.onmouseout = function() {
+                y.x = null,
+                y.y = null
+            };
+            for (var s = [], f = 0; d.n > f; f++) {
+                var h = w() * a,
+                g = w() * c,
+                v = 2 * w() - 1,
+                p = 2 * w() - 1;
+                s.push({
+                    x: h,
+                    y: g,
+                    xa: v,
+                    ya: p,
+                    max: 6e3
+                })
+            }
+            u = s.concat([y]),
+            setTimeout(function() {
+                i()
+            },
+            100)
+        } ();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">QYFJ793&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">QYFJ793&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">&#39;RUST之并发-共享内存&#39;</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">QYFJ793</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 12, 2025&nbsp;&nbsp;11:27:20</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Rust-并发共享内存学习文档"><a href="#Rust-并发共享内存学习文档" class="headerlink" title="Rust 并发共享内存学习文档"></a>Rust 并发共享内存学习文档</h1><h2 id="一、Arc（Atomic-Reference-Counting）"><a href="#一、Arc（Atomic-Reference-Counting）" class="headerlink" title="一、Arc（Atomic Reference Counting）"></a>一、Arc（Atomic Reference Counting）</h2><p><code>Arc</code> 是 Rust 中用于并发环境下的智能指针，它允许多个线程之间安全地共享数据。<code>Arc</code> 通过原子操作来管理引用计数，确保在多线程环境下正确地释放资源。</p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::sync::Arc;</span><br><span class="line"><span class="keyword">use</span> std::thread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">data</span> = Arc::<span class="title function_ invoke__">new</span>(<span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]); <span class="comment">// 创建一个 Arc 包装的数据</span></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">handles</span> = <span class="built_in">vec!</span>[];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">_</span> <span class="keyword">in</span> <span class="number">0</span>..<span class="number">3</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">data_clone</span> = Arc::<span class="title function_ invoke__">clone</span>(&amp;data); <span class="comment">// 克隆 Arc，增加引用计数</span></span><br><span class="line">        <span class="keyword">let</span> <span class="variable">handle</span> = thread::<span class="title function_ invoke__">spawn</span>(<span class="keyword">move</span> || &#123;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, data_clone); <span class="comment">// 在子线程中访问共享数据</span></span><br><span class="line">        &#125;);</span><br><span class="line">        handles.<span class="title function_ invoke__">push</span>(handle);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">handle</span> <span class="keyword">in</span> handles &#123;</span><br><span class="line">        handle.<span class="title function_ invoke__">join</span>().<span class="title function_ invoke__">unwrap</span>(); <span class="comment">// 等待所有子线程完成</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出结果"><a href="#输出结果" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[1, 2, 3]</span><br><span class="line">[1, 2, 3]</span><br><span class="line">[1, 2, 3]</span><br></pre></td></tr></table></figure>
+
+<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><ul>
+<li><code>Arc::new</code> 创建一个 <code>Arc</code> 包装的数据。</li>
+<li>使用 <code>Arc::clone</code> 克隆 <code>Arc</code>，这会增加引用计数。</li>
+<li>在子线程中通过克隆的 <code>Arc</code> 访问共享数据。</li>
+<li>当最后一个 <code>Arc</code> 被释放时，数据才会被销毁。</li>
+</ul>
+<h2 id="二、Mutex（互斥锁）"><a href="#二、Mutex（互斥锁）" class="headerlink" title="二、Mutex（互斥锁）"></a>二、Mutex（互斥锁）</h2><p><code>Mutex</code> 是 Rust 中用于保护共享数据的互斥锁。它确保同一时间只有一个线程可以访问被保护的数据。</p>
+<h3 id="代码示例-1"><a href="#代码示例-1" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::sync::&#123;Arc, Mutex&#125;;</span><br><span class="line"><span class="keyword">use</span> std::thread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">counter</span> = Arc::<span class="title function_ invoke__">new</span>(Mutex::<span class="title function_ invoke__">new</span>(<span class="number">0</span>)); <span class="comment">// 创建一个 Mutex 包装的计数器</span></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">handles</span> = <span class="built_in">vec!</span>[];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">_</span> <span class="keyword">in</span> <span class="number">0</span>..<span class="number">10</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">counter_clone</span> = Arc::<span class="title function_ invoke__">clone</span>(&amp;counter);</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">handle</span> = thread::<span class="title function_ invoke__">spawn</span>(<span class="keyword">move</span> || &#123;</span><br><span class="line">            <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">num</span> = counter_clone.<span class="title function_ invoke__">lock</span>().<span class="title function_ invoke__">unwrap</span>(); <span class="comment">// 获取锁并访问数据</span></span><br><span class="line">            *num += <span class="number">1</span>; <span class="comment">// 修改数据</span></span><br><span class="line">        &#125;);</span><br><span class="line">        handles.<span class="title function_ invoke__">push</span>(handle);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">handle</span> <span class="keyword">in</span> handles &#123;</span><br><span class="line">        handle.<span class="title function_ invoke__">join</span>().<span class="title function_ invoke__">unwrap</span>(); <span class="comment">// 等待所有子线程完成</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Result: &#123;&#125;&quot;</span>, *counter.<span class="title function_ invoke__">lock</span>().<span class="title function_ invoke__">unwrap</span>()); <span class="comment">// 输出最终结果</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出结果-1"><a href="#输出结果-1" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Result: 10</span><br></pre></td></tr></table></figure>
+
+<h3 id="说明-1"><a href="#说明-1" class="headerlink" title="说明"></a>说明</h3><ul>
+<li><code>Mutex::new</code> 创建一个 <code>Mutex</code> 包装的数据。</li>
+<li>使用 <code>Arc</code> 克隆 <code>Mutex</code>，以便在多个线程之间共享。</li>
+<li>通过 <code>lock</code> 方法获取锁，访问和修改数据。</li>
+<li><code>lock</code> 方法会阻塞当前线程，直到获取到锁。</li>
+</ul>
+<h2 id="三、RwLock（读写锁）"><a href="#三、RwLock（读写锁）" class="headerlink" title="三、RwLock（读写锁）"></a>三、RwLock（读写锁）</h2><p><code>RwLock</code> 是一种更细粒度的锁，允许多个线程同时读取数据，但写入时需要独占访问。</p>
+<h3 id="代码示例-2"><a href="#代码示例-2" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::sync::&#123;Arc, RwLock&#125;;</span><br><span class="line"><span class="keyword">use</span> std::thread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">data</span> = Arc::<span class="title function_ invoke__">new</span>(RwLock::<span class="title function_ invoke__">new</span>(<span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])); <span class="comment">// 创建一个 RwLock 包装的数据</span></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">handles</span> = <span class="built_in">vec!</span>[];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建读取线程</span></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">_</span> <span class="keyword">in</span> <span class="number">0</span>..<span class="number">5</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">data_clone</span> = Arc::<span class="title function_ invoke__">clone</span>(&amp;data);</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">handle</span> = thread::<span class="title function_ invoke__">spawn</span>(<span class="keyword">move</span> || &#123;</span><br><span class="line">            <span class="keyword">let</span> <span class="variable">data_read</span> = data_clone.<span class="title function_ invoke__">read</span>().<span class="title function_ invoke__">unwrap</span>(); <span class="comment">// 获取读锁</span></span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, *data_read); <span class="comment">// 读取数据</span></span><br><span class="line">        &#125;);</span><br><span class="line">        handles.<span class="title function_ invoke__">push</span>(handle);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建写入线程</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">data_clone</span> = Arc::<span class="title function_ invoke__">clone</span>(&amp;data);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">handle</span> = thread::<span class="title function_ invoke__">spawn</span>(<span class="keyword">move</span> || &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">data_write</span> = data_clone.<span class="title function_ invoke__">write</span>().<span class="title function_ invoke__">unwrap</span>(); <span class="comment">// 获取写锁</span></span><br><span class="line">        data_write.<span class="title function_ invoke__">push</span>(<span class="number">4</span>); <span class="comment">// 修改数据</span></span><br><span class="line">    &#125;);</span><br><span class="line">    handles.<span class="title function_ invoke__">push</span>(handle);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">handle</span> <span class="keyword">in</span> handles &#123;</span><br><span class="line">        handle.<span class="title function_ invoke__">join</span>().<span class="title function_ invoke__">unwrap</span>(); <span class="comment">// 等待所有子线程完成</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Final data: &#123;:?&#125;&quot;</span>, *data.<span class="title function_ invoke__">read</span>().<span class="title function_ invoke__">unwrap</span>()); <span class="comment">// 输出最终数据</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出结果-2"><a href="#输出结果-2" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[1, 2, 3]</span><br><span class="line">[1, 2, 3]</span><br><span class="line">[1, 2, 3]</span><br><span class="line">[1, 2, 3]</span><br><span class="line">[1, 2, 3]</span><br><span class="line">Final data: [1, 2, 3, 4]</span><br></pre></td></tr></table></figure>
+
+<h3 id="说明-2"><a href="#说明-2" class="headerlink" title="说明"></a>说明</h3><ul>
+<li><code>RwLock::new</code> 创建一个 <code>RwLock</code> 包装的数据。</li>
+<li>使用 <code>read</code> 方法获取读锁，多个线程可以同时获取读锁。</li>
+<li>使用 <code>write</code> 方法获取写锁，写锁是独占的，会阻塞其他读或写操作。</li>
+<li>读锁和写锁之间互斥。</li>
+</ul>
+<h2 id="四、Condvar（条件变量）"><a href="#四、Condvar（条件变量）" class="headerlink" title="四、Condvar（条件变量）"></a>四、Condvar（条件变量）</h2><p><code>Condvar</code> 用于线程间的同步，允许线程在某个条件不满足时挂起，并在条件满足时被唤醒。</p>
+<h3 id="代码示例-3"><a href="#代码示例-3" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::sync::&#123;Arc, Condvar, Mutex&#125;;</span><br><span class="line"><span class="keyword">use</span> std::thread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">pair</span> = Arc::<span class="title function_ invoke__">new</span>((Mutex::<span class="title function_ invoke__">new</span>(<span class="literal">false</span>), Condvar::<span class="title function_ invoke__">new</span>())); <span class="comment">// 创建一个包含互斥锁和条件变量的元组</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">pair_clone</span> = Arc::<span class="title function_ invoke__">clone</span>(&amp;pair);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建一个线程等待条件满足</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">handle</span> = thread::<span class="title function_ invoke__">spawn</span>(<span class="keyword">move</span> || &#123;</span><br><span class="line">        <span class="keyword">let</span> (lock, cvar) = &amp;*pair_clone;</span><br><span class="line">        <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">started</span> = lock.<span class="title function_ invoke__">lock</span>().<span class="title function_ invoke__">unwrap</span>(); <span class="comment">// 获取锁</span></span><br><span class="line">        <span class="keyword">while</span> !*started &#123;</span><br><span class="line">            started = cvar.<span class="title function_ invoke__">wait</span>(started).<span class="title function_ invoke__">unwrap</span>(); <span class="comment">// 等待条件变量</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Thread received signal and started!&quot;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 主线程修改条件并通知等待线程</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">let</span> (lock, cvar) = &amp;*pair;</span><br><span class="line">        <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">started</span> = lock.<span class="title function_ invoke__">lock</span>().<span class="title function_ invoke__">unwrap</span>(); <span class="comment">// 获取锁</span></span><br><span class="line">        *started = <span class="literal">true</span>; <span class="comment">// 修改条件</span></span><br><span class="line">        cvar.<span class="title function_ invoke__">notify_one</span>(); <span class="comment">// 通知等待线程</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    handle.<span class="title function_ invoke__">join</span>().<span class="title function_ invoke__">unwrap</span>(); <span class="comment">// 等待子线程完成</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出结果-3"><a href="#输出结果-3" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Thread received signal and started!</span><br></pre></td></tr></table></figure>
+
+<h3 id="说明-3"><a href="#说明-3" class="headerlink" title="说明"></a>说明</h3><ul>
+<li><code>Condvar</code> 与 <code>Mutex</code> 一起使用。</li>
+<li>使用 <code>wait</code> 方法使线程在条件不满足时挂起，并释放锁。</li>
+<li>使用 <code>notify_one</code> 或 <code>notify_all</code> 方法唤醒等待的线程。</li>
+</ul>
+<h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p>Rust 提供了多种工具来支持并发共享内存，包括 <code>Arc</code>、<code>Mutex</code>、<code>RwLock</code> 和 <code>Condvar</code>。这些工具可以帮助开发者在多线程环境下安全地共享和同步数据。通过合理选择和组合这些工具，可以实现高效的并发程序。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>QYFJ793</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2025/04/12/RUST%E4%B9%8B%E5%B9%B6%E5%8F%91-%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/">http://example.com/2025/04/12/RUST%E4%B9%8B%E5%B9%B6%E5%8F%91-%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2025/04/12/RUST%E4%B9%8B%E5%B9%B6%E5%8F%91-%E6%A6%82%E5%BF%B5%E3%80%81%E7%BA%BF%E7%A8%8B%E3%80%81%E9%80%9A%E4%BF%A1/">RUST之概念、线程、通信'</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© QYFJ793 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
